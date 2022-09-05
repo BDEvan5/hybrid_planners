@@ -31,6 +31,7 @@ class TrainSimulation(TestSimulation):
             self.race_track = RaceTrack(run.map_name)
             self.race_track.load_centerline()
             self.reward = CrossTrackHeadReward(self.race_track, self.conf)
+            self.n_obstacles = run.n_obstacles
             self.n_train_steps = run.n_train_steps
 
             self.planner = AgentTrainer(run, self.conf)
@@ -88,7 +89,7 @@ class TrainSimulation(TestSimulation):
                     crash_counter += 1
 
                 observation = self.reset_simulation()
-                    
+                
             
         self.planner.t_his.print_update(True)
         self.planner.t_his.save_csv_data()

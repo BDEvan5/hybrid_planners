@@ -400,6 +400,21 @@ class ScanSimulator2D(object):
 
         return True
 
+    def update_map_img(self, new_img):
+        """
+        Update the bitmap of the scan simulator by image
+
+            Args:
+                new_img (np.ndarray): new map image
+
+            Returns:
+                flag (bool): if image reading and loading is successful
+        """
+        self.map_img = new_img
+        self.dt = get_dt(self.map_img, self.map_resolution)
+
+        return True
+
     def scan(self, pose, rng, std_dev=0.01):
         """
         Perform simulated 2D scan by pose on the given map

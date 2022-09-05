@@ -31,8 +31,7 @@ from gym import error, spaces, utils
 from gym.utils import seeding
 
 # base classes
-from RacingRewards.f110_gym.base_classes import Simulator
-from RacingRewards.f110_gym.laser_models import get_dt
+from hybrid_planners.f110_gym.base_classes import Simulator
 
 # others
 import numpy as np
@@ -430,7 +429,7 @@ class F110Env(gym.Env):
 
         return center_pts, widths
 
-    def add_obstacles(self, n_obstacles, obstacle_size=[0.4, 0.4]):
+    def add_obstacles(self, n_obstacles, obstacle_size=[0.7, 0.7]):
         """
         Adds a set number of obstacles to the envioronment using the track centerline. 
         Note: this function requires a csv file with the centerline points in it which can be loaded. 
@@ -452,10 +451,11 @@ class F110Env(gym.Env):
 
         # randomly select certain idx's
         rand_idxs = np.random.randint(1, len(self.track_pts)-1, n_obstacles)
-        
-        # randomly select location within box of minimum_width around the center point
-        rands = np.random.uniform(-1, 1, size=(n_obstacles, 2))
-        obs_locations = self.track_pts[rand_idxs, :] + rands * widths[rand_idxs]
+        radius = 0.5
+        rand_radii = np.random.rand(n_obstacles, 2)
+        rand_radii = radius * rand_radii
+
+        obs_locations = self.track_pts[rand_idxs, :] + rand_radii
 
         # change the values of the img at each obstacle location
         obs_locations = np.array(obs_locations)

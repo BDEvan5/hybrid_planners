@@ -53,6 +53,7 @@ class TestSimulation():
         self.lap_times = None
         self.completed_laps = None
         self.prev_obs = None
+        self.n_obstacles = None
 
         self.race_track = None
         self.map_name = None
@@ -69,6 +70,7 @@ class TestSimulation():
             self.vehicle_state_history = VehicleStateHistory(run.path, run.run_name)
 
             self.n_test_laps = run.n_test_laps
+            self.n_obstacles = run.n_obstacles
             self.lap_times = []
             self.completed_laps = 0
 
@@ -194,6 +196,7 @@ class TestSimulation():
         reset_pose = np.zeros(3)[None, :]
 
         obs, step_reward, done, _ = self.env.reset(reset_pose)
+        self.env.add_obstacles(self.n_obstacles)
 
         if SHOW_TRAIN: self.env.render('human_fast')
 

@@ -31,9 +31,9 @@ Author: Hongrui Zheng
 import numpy as np
 from numba import njit
 
-from RacingRewards.f110_gym.dynamic_models import vehicle_dynamics_st, pid
-from RacingRewards.f110_gym.laser_models import ScanSimulator2D, check_ttc_jit, ray_cast
-from RacingRewards.f110_gym.collision_models import get_vertices, collision_multiple
+from hybrid_planners.f110_gym.dynamic_models import vehicle_dynamics_st, pid
+from hybrid_planners.f110_gym.laser_models import ScanSimulator2D, check_ttc_jit, ray_cast
+from hybrid_planners.f110_gym.collision_models import get_vertices, collision_multiple
 
 
 from matplotlib import pyplot as plt
@@ -374,7 +374,6 @@ class RaceCar(object):
         """
         self.opp_poses = opp_poses
 
-
     def update_scan(self, agent_scans, agent_index):
         """
         Steps the vehicle's laser scan simulation
@@ -397,6 +396,8 @@ class RaceCar(object):
         new_scan = self.ray_cast_agents(current_scan)
 
         agent_scans[agent_index] = new_scan
+
+
 
 class Simulator(object):
     """
