@@ -78,7 +78,7 @@ class AgentTester:
             conf: namespace with simulation parameters
             mod_conf: namespace with modification planner parameters
         """
-
+        self.v_min_plan = conf.v_min_plan
         self.path = conf.vehicle_path + run.path + run.run_name 
 
         self.actor = torch.load(self.path + '/' + run.run_name + "_actor.pth")

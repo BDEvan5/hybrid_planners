@@ -68,7 +68,7 @@ class TestSimulation():
             self.planner = AgentTrainer(run, self.conf)
             self.vehicle_state_history = VehicleStateHistory(run.path, run.run_name)
 
-            self.n_test_laps = self.test_params.n_test_laps
+            self.n_test_laps = run.n_test_laps
             self.lap_times = []
             self.completed_laps = 0
 
@@ -93,12 +93,12 @@ class TestSimulation():
                 if  SHOW_TEST: self.env.render('human_fast')
 
             if observation['lap_done']:
-                if self.verbose: print(f"Lap {i} Complete in time: {observation['current_laptime']}")
+                if VERBOSE: print(f"Lap {i} Complete in time: {observation['current_laptime']}")
                 self.lap_times.append(observation['current_laptime'])
                 self.completed_laps += 1
 
             if observation['colision_done']:
-                if self.verbose: print(f"Lap {i} Crashed in time: {observation['current_laptime']}")
+                if VERBOSE: print(f"Lap {i} Crashed in time: {observation['current_laptime']}")
                     
 
             self.vehicle_state_history.save_history(i)

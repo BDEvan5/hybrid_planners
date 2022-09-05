@@ -12,7 +12,7 @@ architecture: "E2e"
 n: 1
 set_n: 2
 
-n_train_steps: 10000
+n_train_steps: 5000
 n_test_laps: 2
 # n_test_laps: 10
 
@@ -21,10 +21,10 @@ racing: False
 
 
 runs:
-  - map_name: "f1_aut"
+  # - map_name: "f1_aut"
   # - map_name: "f1_mco"
   # - map_name: "f1_esp"
-  # - map_name: "f1_gbr"
+  - map_name: "f1_gbr"
 
 
 
