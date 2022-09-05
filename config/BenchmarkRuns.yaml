@@ -24,7 +24,8 @@ runs:
   # - map_name: "f1_aut"
   # - map_name: "f1_mco"
   # - map_name: "f1_esp"
-  - map_name: "f1_gbr"
+  # - map_name: "f1_gbr"
+  - map_name: "columbia_small"
 
 
 

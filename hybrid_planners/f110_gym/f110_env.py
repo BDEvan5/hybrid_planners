@@ -195,6 +195,8 @@ class F110Env(gym.Env):
         self.render_obs = None
 
         self.poses = []
+        self.track_pts, self.track_widths = self.load_centerline()
+
 
     def __del__(self):
         """
@@ -428,7 +430,7 @@ class F110Env(gym.Env):
 
         return center_pts, widths
 
-    def add_obstacles(self, n_obstacles, obstacle_size=[0.5, 0.5]):
+    def add_obstacles(self, n_obstacles, obstacle_size=[0.4, 0.4]):
         """
         Adds a set number of obstacles to the envioronment using the track centerline. 
         Note: this function requires a csv file with the centerline points in it which can be loaded. 
@@ -447,14 +449,13 @@ class F110Env(gym.Env):
         obs_size_m = np.array(obstacle_size)
         obs_size_px = np.array(obs_size_m / scan_sim.map_resolution, dtype=int)
         
-        center_pts, widths = self.load_centerline()
 
         # randomly select certain idx's
-        rand_idxs = np.random.randint(1, len(center_pts)-1, n_obstacles)
+        rand_idxs = np.random.randint(1, len(self.track_pts)-1, n_obstacles)
         
         # randomly select location within box of minimum_width around the center point
         rands = np.random.uniform(-1, 1, size=(n_obstacles, 2))
-        obs_locations = center_pts[rand_idxs, :] + rands * widths[rand_idxs]
+        obs_locations = self.track_pts[rand_idxs, :] + rands * widths[rand_idxs]
 
         # change the values of the img at each obstacle location
         obs_locations = np.array(obs_locations)
@@ -506,39 +507,6 @@ class F110Env(gym.Env):
         """
 
         F110Env.render_callbacks.append(callback_func)
-
-    # def render(self, mode='human'):
-    #     """
-    #     Renders the environment with pyglet. Use mouse scroll in the window to zoom in/out, use mouse click drag to pan. Shows the agents, the map, current fps (bottom left corner), and the race information near as text.
-
-    #     Args:
-    #         mode (str, default='human'): rendering mode, currently supports:
-    #             'human': slowed down rendering such that the env is rendered in a way that sim time elapsed is close to real time elapsed
-    #             'human_fast': render as fast as possible
-
-    #     Returns:
-    #         None
-    #     """
-    #     assert mode in ['human', 'human_fast']
-        
-    #     if F110Env.renderer is None:
-    #         # first call, initialize everything
-    #         from SuperSafety.f110_gym.rendering import EnvRenderer
-    #         F110Env.renderer = EnvRenderer(WINDOW_W, WINDOW_H)
-    #         F110Env.renderer.update_map(self.map_name, self.map_ext)
-            
-    #     F110Env.renderer.update_obs(self.render_obs)
-
-    #     for render_callback in F110Env.render_callbacks:
-    #         render_callback(F110Env.renderer)
-        
-    #     F110Env.renderer.dispatch_events()
-    #     F110Env.renderer.on_draw()
-    #     F110Env.renderer.flip()
-    #     if mode == 'human':
-    #         time.sleep(0.005)
-    #     elif mode == 'human_fast':
-            # pass
 
     def render(self, mode='human'):
         """
