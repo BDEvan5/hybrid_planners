@@ -287,39 +287,37 @@ def get_actuation(pose_theta, lookahead_point, position, lookahead_distance, whe
 
 
 class PurePursuit:
-    def __init__(self, conf, test_params):
-        self.name = test_params.run_name
-        path = os.getcwd() + f"/Data/Vehicles/" + test_params.path  + self.name
+    def __init__(self, conf, run):
+        self.name = run.run_name
+        path = os.getcwd() + f"/Data/Vehicles/" + run.path  + self.name
         init_file_struct(path)
 
-        self.trajectory = Trajectory(test_params.map_name)
-        self.trajectory.show_pts()
+        self.trajectory = Trajectory(run.map_name)
+        self.trajectory.load_csv_centerline()
+        # self.trajectory.show_pts()
 
         self.lookahead = conf.lookahead
         self.v_min_plan = conf.v_min_plan
         self.wheelbase =  conf.l_f + conf.l_r
         self.max_steer = conf.max_steer
         self.vehicle_speed = conf.vehicle_speed
-        # self.vehicle_speed = conf.vehicle_speed
 
+        self.racing = run.racing
 
     def plan(self, obs):
         state = obs['state']
         position = state[0:2]
         theta = state[2]
         lookahead_point = self.trajectory.get_current_waypoint(position, self.lookahead)
-        # plt.plot(lookahead_point[0], lookahead_point[1], 'ro')
-        # plt.pause(0.001)
 
         if state[3] < self.v_min_plan:
             return np.array([0.0, self.vehicle_speed])
 
         speed, steering_angle = get_actuation(theta, lookahead_point, position, self.lookahead, self.wheelbase)
         steering_angle = np.clip(steering_angle, -self.max_steer, self.max_steer)
-        # speed = calculate_speed(steering_angle)
-        speed *= 0.8
 
-        # speed = 2
+        if not self.racing: speed = self.vehicle_speed
+
         action = np.array([steering_angle, speed])
 
         return action

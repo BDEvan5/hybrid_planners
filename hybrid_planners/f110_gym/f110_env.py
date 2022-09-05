@@ -451,7 +451,7 @@ class F110Env(gym.Env):
 
         # randomly select certain idx's
         rand_idxs = np.random.randint(1, len(self.track_pts)-1, n_obstacles)
-        radius = 0.5
+        radius = 1
         rand_radii = np.random.rand(n_obstacles, 2)
         rand_radii = radius * rand_radii
 
