@@ -85,25 +85,22 @@ def setup_run_list(run_file):
         for run in run_dict['runs']:
             run["n"] = rep
             run["set_n"] = set_n
-            run['run_name'] = f"{run_dict['test_name']}_{run['map_name']}_{set_n}_{rep}"
-            run['reward_name'] = run_dict['reward_name']
-            run['planner'] = f"{run_dict['planner']}"
+            run['run_name'] = f"{run_dict['architecture']}_{run['map_name']}_{set_n}_{rep}"
+            run['architecture'] = f"{run_dict['architecture']}"
             run['test_name'] = f"{run_dict['test_name']}"
             run['path'] = f"{run_dict['test_name']}/"
+            run['test_name'] = f"{run_dict['test_name']}"
+            run['racing'] = run_dict['racing']
 
+            for key in run_dict.keys():
+                if key not in run.keys() and key != "runs":
+                    run[key] = run_dict[key]
             run_list.append(Namespace(**run))
 
-    test_params = {}
-    for key in run_dict.keys():
-        if key != "runs":
-            test_params[key] = run_dict[key]
-    test_params = Namespace(**test_params)
 
     init_reward_struct("Data/Vehicles/" + run_list[0].path)
 
-    return run_list, test_params
-
-
+    return run_list
 
 @njit(cache=True)
 def calculate_speed(delta, f_s=0.9):
@@ -124,27 +121,6 @@ def calculate_speed(delta, f_s=0.9):
 
     return V
 
-def plot_speed_profile():
-    ds = np.linspace(-0.40, 0.40, 100)
-
-    turn_on_pgf()
-
-    plt.figure(1, figsize=(5, 2.5))
-    vs = np.array([calculate_speed(d, 1) for d in ds])
-    plt.plot(ds, vs, linewidth=2, color='darkblue')
-    # for fs in [0.5, 0.6, 0.7, 0.8, 0.9, 1]:
-    #     vs = np.array([calculate_speed(d, fs) for d in ds])
-    #     plt.plot(ds, vs)
-
-    # plt.title(f"Friction Limits for F1/10th Race Car")
-    plt.ylim([0, 6.5])
-    plt.xlabel("Steering Angle (rad)")
-    plt.ylabel("Velocity (m/s)")
-
-    save_pgf_fig("FrictionLimits")
-    # save_png_fig("FrictionLimits")
-
-    # plt.show()
 
 if __name__ == '__main__':
 

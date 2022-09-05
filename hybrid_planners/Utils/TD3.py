@@ -190,7 +190,6 @@ class TD3(object):
             next_state = torch.FloatTensor(y)
             done = torch.FloatTensor(1 - d)
             reward = torch.FloatTensor(r)
-
             # Select action according to policy and add clipped noise 
             noise = torch.FloatTensor(u).data.normal_(0, POLICY_NOISE)
             noise = noise.clamp(-NOISE_CLIP, NOISE_CLIP)
@@ -247,18 +246,3 @@ class TD3(object):
         self.critic_target = torch.load('%s/%s_critic_target.pth' % (directory, filename))
 
         print("Agent Loaded")
-
-    def try_load(self, load=True, h_size=300, path=None):
-        if load:
-            try:
-                self.load(path)
-            except Exception as e:
-                print(f"Exception: {e}")
-                print(f"Unable to load model")
-                pass
-        else:
-            print(f"Not loading - restarting training")
-            self.create_agent(h_size)
-
-        self.actor_optimizer = torch.optim.Adam(self.actor.parameters(), lr=1e-3)
-        self.critic_optimizer = torch.optim.Adam(self.critic.parameters(), lr=1e-3)

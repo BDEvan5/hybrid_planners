@@ -50,11 +50,11 @@ class TrainHistory():
         self.t_counter += 1 
         self.step_rewards.append(new_r)
 
-    def lap_done(self, progress, show_reward=False):
+    def lap_done(self, reward, progress, show_reward=False):
+        self.add_step_data(reward)
         self.lengths[self.ptr] = self.ep_counter
         self.rewards[self.ptr] = self.ep_reward
         self.progresses[self.ptr] = progress
-        # print(f"EP reward: {self.ep_reward:.2f}")
         self.ptr += 1
 
         if show_reward:

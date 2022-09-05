@@ -1,4 +1,6 @@
 from matplotlib import pyplot as plt
+import csv
+import numpy as np
 
 # Track base
 class RaceTrack:
@@ -21,8 +23,8 @@ class RaceTrack:
         plt.show()
 
     def load_centerline(self):
-        filename = 'map_data/' + self.map_name + '_std.csv'
-        # filename = 'maps/' + self.map_name + '_centerline.csv'
+        # filename = 'map_data/' + self.map_name + '_std.csv'
+        filename = 'maps/' + self.map_name + '_centerline.csv'
         xs, ys, w_rs, w_ls = [0], [0], [], []
         with open(filename, 'r') as file:
             csvFile = csv.reader(file)
@@ -196,6 +198,10 @@ class CrossTrackHeadReward:
         self.r_distance = conf.r_distance
 
     def __call__(self, observation, prev_obs):
+        if observation['lap_done']:
+            return 1  # complete
+        if observation['colision_done']:
+            return -1 # crash
         position = observation['state'][0:2]
         theta = observation['state'][2]
         heading, distance = self.race_track.get_cross_track_heading(position)

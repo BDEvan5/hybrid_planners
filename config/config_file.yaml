@@ -14,7 +14,7 @@ vehicle_speed: 2          # speed at which the vehilce is set to travel at
 
 # agent parameters
 n_beams: 20               # number of beams used by agent
-range_finder_scale: 5     # scaling of beams for NN
+range_finder_scale: 10     # scaling of beams for NN
 h_size: 100               # size of hidden layers in NN
 # r1: 0.012                 # heading & velocity reward value
 # r2: 0.006                 # distance reward penalty

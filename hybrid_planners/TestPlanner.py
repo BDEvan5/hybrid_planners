@@ -2,24 +2,17 @@ from hybrid_planners.f110_gym.f110_env import F110Env
 from hybrid_planners.Utils.utils import *
 from hybrid_planners.Planners.PurePursuit import PurePursuit
 from hybrid_planners.Planners.follow_the_gap import FollowTheGap
-from hybrid_planners.Planners.AgentPlanner import TestVehicle
+from hybrid_planners.Planners.AgentPlanners import AgentTrainer, AgentTester
 
 import numpy as np
 import time
 
-class TestLogger:
-    def __init__(self):
-        self.path = "Data/Logs"  
-        self.env_log = "/test_log.csv"
-        self.lap = 0
 
-        with open(self.path + self.env_log, "w") as f:
-            print(f"file cleaned")
-            # f.write("act_steer, act_vel, pos_x, pos_y, theta, v\n")
+# settings
+SHOW_TRAIN = False
+SHOW_TEST = False
+VERBOSE = True
 
-    def write_env_log(self, data):
-        with open(self.path + self.env_log, "a") as f:
-            f.write(data)
 
 class VehicleStateHistory:
     def __init__(self, path, vehicle_name):
@@ -50,7 +43,7 @@ class VehicleStateHistory:
 
 class TestSimulation():
     def __init__(self, run_file: str):
-        self.run_data, self.test_params = setup_run_list(run_file)
+        self.run_data = setup_run_list(run_file)
         self.conf = load_conf("config_file")
 
         self.env = None
@@ -65,13 +58,6 @@ class TestSimulation():
         self.map_name = None
         self.reward = None
 
-        # flags 
-        self.show_test = self.test_params.show_test
-        self.show_train = self.test_params.show_train
-        self.verbose = self.test_params.verbose
-        self.logging = self.test_params.logging
-
-        self.logger = TestLogger()
         self.vehicle_state_history = None
 
     def run_testing_evaluation(self):
@@ -79,9 +65,7 @@ class TestSimulation():
             self.env = F110Env(map=run.map_name)
             self.map_name = run.map_name
 
-            if run.planner == "PP": self.planner = PurePursuit(self.conf, run)
-            elif run.planner == "FGM": self.planner = FollowTheGap(self.conf, run)
-            else: self.planner = TestVehicle(run, self.conf)
+            self.planner = AgentTrainer(run, self.conf)
             self.vehicle_state_history = VehicleStateHistory(run.path, run.run_name)
 
             self.n_test_laps = self.test_params.n_test_laps
@@ -106,7 +90,7 @@ class TestSimulation():
             while not observation['colision_done'] and not observation['lap_done']:
                 action = self.planner.plan(observation)
                 observation = self.run_step(action)
-                if self.show_test: self.env.render('human_fast')
+                if  SHOW_TEST: self.env.render('human_fast')
 
             if observation['lap_done']:
                 if self.verbose: print(f"Lap {i} Complete in time: {observation['current_laptime']}")
@@ -150,10 +134,6 @@ class TestSimulation():
         
         observation = self.build_observation(obs, done)
 
-        if self.logging:
-            data = f"{action[0]:.2f}, {action[1]:.2f}, {obs['poses_x'][0]:.2f}, {obs['poses_y'][0]:.2f}, {obs['poses_theta'][0]}, {obs['linear_vels_x'][0]}\n"
-            self.logger.write_env_log(data)
-        
         return observation
 
     def build_observation(self, obs, done):
@@ -215,7 +195,7 @@ class TestSimulation():
 
         obs, step_reward, done, _ = self.env.reset(reset_pose)
 
-        if self.show_train: self.env.render('human_fast')
+        if SHOW_TRAIN: self.env.render('human_fast')
 
         self.prev_obs = None
         observation = self.build_observation(obs, done)
