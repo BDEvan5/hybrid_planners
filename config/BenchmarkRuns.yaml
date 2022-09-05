@@ -4,8 +4,8 @@ test_name: "Benchmark" # the series of tests being run in thesis
 # planner: "FGM"
 # planner: "Agent"
 
-architecture: "E2e"
-# architecture: "Serial"
+# architecture: "E2e"
+architecture: "Serial"
 # architecture: "Mod"
 
 

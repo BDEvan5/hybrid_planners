@@ -8,7 +8,7 @@ from hybrid_planners.Utils.utils import init_file_struct, calculate_speed
 
 from matplotlib import pyplot as plt
 
-
+from hybrid_planners.Planners.PurePursuit import PurePursuit
 
 class E2eArchitecture:
     def __init__(self, run, conf):
@@ -54,12 +54,17 @@ class E2eArchitecture:
 
 class SerialArchitecture:
     def __init__(self, run, conf):
-        super().__init__(run.run_name, conf)
-        self.state_space = conf.n_beams 
-        if run.racing:
-            self.action_space = 2
-        else:
-            self.action_space = 1
+        self.state_space = conf.n_beams +1 
+        self.range_finder_scale = conf.range_finder_scale
+        self.n_beams = conf.n_beams
+        self.max_v = conf.max_v
+        self.max_steer = conf.max_steer
+        self.vehicle_speed = conf.vehicle_speed
+
+        self.action_space = 1
+        if run.racing: self.action_space += 2
+
+        self.pp_planner = PurePursuit(conf, run)
 
     def transform_obs(self, obs):
         """
@@ -73,13 +78,19 @@ class SerialArchitecture:
         """
 
         scan = np.array(obs['scan']) 
+        scaled_scan = scan/self.range_finder_scale
 
-        scan = np.clip(scan/self.range_finder_scale, 0, 1)
+        scan = np.clip(scaled_scan, 0, 1)
+        pp_steering = self.pp_planner.plan(obs)
 
-        return scan
+        nn_obs = np.concatenate((scan, np.array([pp_steering[0]])))
+
+        return nn_obs
 
     def transform_action(self, nn_action):
         steering_angle = nn_action[0] * self.max_steer
+        if np.isnan(steering_angle):
+            print(f"Steering Nannnnn")
         if self.action_space == 2:
             speed = (nn_action[1] + 1) * (self.max_v  / 2 - 0.5) + 1
         else:
@@ -88,3 +99,4 @@ class SerialArchitecture:
         action = np.array([steering_angle, speed])
 
         return action
+

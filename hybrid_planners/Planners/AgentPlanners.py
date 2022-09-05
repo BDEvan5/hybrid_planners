@@ -5,7 +5,7 @@ import torch
 from numba import njit
 
 from hybrid_planners.Utils.utils import init_file_struct, calculate_speed
-from hybrid_planners.Planners.Architectures import E2eArchitecture
+from hybrid_planners.Planners.Architectures import *
 
 from matplotlib import pyplot as plt
 
@@ -25,7 +25,7 @@ class AgentTrainer:
         self.action = None
 
         if run.architecture == "E2e": self.architecture = E2eArchitecture(run, conf)
-        # elif run.architecture == "Serial": self.architecture = SerialArchitecutre()
+        elif run.architecture == "Serial": self.architecture = SerialArchitecture(run, conf)
         else: raise Exception("Unknown architecture")
 
         self.agent = TD3(self.architecture.state_space, self.architecture.action_space, 1, run.run_name)
@@ -42,8 +42,14 @@ class AgentTrainer:
             self.action = np.array([0, 7])
             return self.action
 
+        if np.isnan(nn_state).any():
+            print(f"NAN in state: {nn_state}")
+
         self.nn_state = nn_state
         self.nn_act = self.agent.act(self.nn_state)
+
+        if np.isnan(self.nn_act).any():
+            print(f"NAN in act: {nn_state}")
 
         self.action = self.architecture.transform_action(self.nn_act)
 
@@ -62,7 +68,16 @@ class AgentTrainer:
         nn_s_prime = self.architecture.transform_obs(s_prime)
 
         self.t_his.lap_done(s_prime['reward'], s_prime['progress'], False)
+        if self.nn_state is None:
+            print(f"Crashed on first step: RETURNING")
+            return
+        
         self.agent.save(self.path)
+        if np.isnan(self.nn_act).any():
+            print(f"NAN in act: {self.nn_act}")
+            raise Exception("NAN in act")
+        if np.isnan(self.nn_act).any():
+            print(f"NAN in act: {self.nn_act}")
 
         self.agent.replay_buffer.add(self.nn_state, self.nn_act, nn_s_prime, s_prime['reward'], True)
         self.nn_state = None
