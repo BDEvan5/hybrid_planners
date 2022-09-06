@@ -5,7 +5,7 @@ from hybrid_planners.Planners.follow_the_gap import FollowTheGap
 from hybrid_planners.Planners.AgentPlanners import AgentTrainer, AgentTester
 
 import numpy as np
-import time
+import time, torch
 from hybrid_planners.Utils.HistoryStructs import VehicleStateHistory
 
 # settings
@@ -36,7 +36,12 @@ class TestSimulation():
 
     def run_testing_evaluation(self):
         for run in self.run_data:
-            self.env = F110Env(map=run.map_name)
+            seed = run.random_seed + 10*run.n
+            np.random.seed(seed) # repetition seed
+            torch.use_deterministic_algorithms(True)
+            torch.manual_seed(seed)
+
+            self.env = F110Env(map=run.map_name, seed=seed)
             self.map_name = run.map_name
 
             if run.architecture == "PP": self.planner = PurePursuit(self.conf, run)

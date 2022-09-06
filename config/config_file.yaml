@@ -30,7 +30,8 @@ r_distance: 0.5
 sim_steps: 10              # Number of simulator steps per planning step
 max_steps: 5000
 # add a simtime step?
-random_seed: 1000          # Seed for NumPy randomness
+# random_seed: 2000          # Seed for NumPy randomness
+# random_seed: 1000          # Seed for NumPy randomness
 
 # PurePursuit planner values
 lookahead: 1.4

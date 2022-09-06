@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os, glob
 import trajectory_planning_helpers as tph
-from matplotlib.ticker import PercentFormatter
+from matplotlib.ticker import PercentFormatter, MultipleLocator
 from matplotlib.collections import LineCollection
 
 from hybrid_planners.DataTools.MapData import MapData
@@ -94,7 +94,8 @@ class TestData:
         self.load_test_data()
 
     def load_test_data(self):
-        for i in range(10):
+        n_laps = len(glob.glob(self.path + "Lap_*_history_*.npy"))
+        for i in range(n_laps):
             d = LapData(self.path, i)
             d.calculate_lap_statistics(self.race_track)
             self.laps.append(d)
@@ -166,18 +167,18 @@ class TestData:
 
         return ret_string
 
-    def plot_avg_progress(self, x):
-        progresses = np.array([l.progress for l in self.laps])
-        avg_progress = np.mean([l.progress for l in self.laps])
-        # std_progress = np.std([l.progress for l in self.laps])
+    def plot_avg_progress(self, x, color):
+        progresses = np.array([l.progress for l in self.laps]) * 100
+        avg_progress = np.mean(progresses)
         q1 = np.percentile(progresses, 25)
         q3 = np.percentile(progresses, 75)
         std_err = np.array([avg_progress - q1, q3 - avg_progress])[:, None]
 
         # give it [lower_err, upper_err]
-        plt.plot(x, avg_progress, 'x', color='blue', markersize=10)
-        plt.errorbar(x, avg_progress, yerr=std_err, color='red', capsize=5)
+        plt.plot(x, avg_progress, '.', color=color, markersize=4)
+        plt.errorbar(x, avg_progress, yerr=std_err, color=color, capsize=1, alpha=0.6, linewidth=2)
         
+        return avg_progress
 
 class TestSet:
     """Holds all the tests for a comparative assessment
@@ -190,6 +191,7 @@ class TestSet:
         folders = glob.glob(os.path.join(self.path, "*/"))
         folders.sort()
         for i, f in enumerate(folders):
+            print(f"Load: {f}")
             d = TestData(f)
             self.test_sets.append(d)
 
@@ -205,16 +207,32 @@ class TestSet:
             for test_set in self.test_sets:
                 f.write(test_set.generate_summary_line() + "\n")
 
-    def plot_avg_progress(self):
-        plt.figure(1, figsize=(10, 10))
+    def plot_avg_progress(self, color, offset):
+        plt.figure(1, figsize=(6, 2.5))
 
+        xs = []
+        avgs = []
         for i, test_set in enumerate(self.test_sets):
-            test_set.plot_avg_progress(i)
+            avg = test_set.plot_avg_progress(i+offset, color)
+            avgs.append(avg)
+            xs.append(i+offset)
 
-        plt.show()
+        plt.plot(xs, avgs, '-', color=color, linewidth=2)
+
+        plt.xlabel("Number of Obstacles")
+        plt.ylabel("Average Progress")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.ylim(0, 105)
+        plt.gca().get_xaxis().set_major_locator(MultipleLocator(1))
+
+
+        # plt.show()
+
 
 def generate_pp_data_set():
-    path = "Data/Vehicles/RunPP/PP_f1_aut_1_0/"
+    path = "Data/Vehicles/RunPP/PP_f1_aut_2_0/"
+    # path = "Data/Vehicles/RunPP/PP_f1_aut_1_0/"
 
     test_set = TestSet(path)
     test_set.load_test_set()
@@ -222,5 +240,22 @@ def generate_pp_data_set():
     test_set.write_test_summary()
     test_set.plot_avg_progress()
 
+def generate_pp_obs_graph():
+    path = "Data/Vehicles/RunPP/PP_f1_aut_2_0/"
 
-generate_pp_data_set()
+    test_set = TestSet(path)
+    test_set.load_test_set()
+    test_set.plot_avg_progress('blue', 0.05)
+
+    path = "Data/Vehicles/RunPP/PP_f1_aut_4_0/"
+
+    test_set = TestSet(path)
+    test_set.load_test_set()
+    test_set.plot_avg_progress('darkgreen', -0.05)
+
+    plt.savefig("Data/LowSpeedEval/PP_Obs_progress.pdf", bbox_inches='tight', pad_inches=0)
+    plt.show()
+
+
+# generate_pp_data_set()
+generate_pp_obs_graph()
