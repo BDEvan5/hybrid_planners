@@ -16,13 +16,26 @@ n_train_steps: 50000
 # n_test_laps: 2
 n_test_laps: 10
 
-n_obstacles: 2
+# n_obstacles: 8
 racing: True
 # racing: False
 
+# map_name: "columbia_small"
+map_name: "f1_aut"
 
 runs:
-  - map_name: "f1_aut"
+  - n_obstacles: 0
+  - n_obstacles: 1
+  - n_obstacles: 2
+  - n_obstacles: 3
+  - n_obstacles: 4
+  - n_obstacles: 5
+  - n_obstacles: 6
+  - n_obstacles: 7
+  - n_obstacles: 8
+
+
+  # - map_name: "f1_aut"
   # - map_name: "f1_mco"
   # - map_name: "f1_esp"
   # - map_name: "f1_gbr"

@@ -290,8 +290,9 @@ class PurePursuit:
     def __init__(self, conf, run):
         self.name = run.run_name
         path = os.getcwd() + f"/Data/Vehicles/" + run.path  + self.name
-        if run.architecture == "PP":
-            init_file_struct(path)
+        # if run.architecture == "PP":
+        if not os.path.exists(path):
+            os.mkdir(path) # only make a path if it doesnt exist
 
         self.trajectory = Trajectory(run.map_name)
         if run.racing: self.trajectory.load_csv_track()

@@ -10,7 +10,7 @@ from hybrid_planners.Utils.HistoryStructs import VehicleStateHistory
 
 # settings
 SHOW_TRAIN = False
-SHOW_TEST = True
+SHOW_TEST = False
 VERBOSE = True
 
 
@@ -41,7 +41,7 @@ class TestSimulation():
 
             if run.architecture == "PP": self.planner = PurePursuit(self.conf, run)
             else: self.planner = AgentTrainer(run, self.conf)
-            save_path = run.path + run.run_name + "/TestData/"
+            save_path = run.path + run.run_name + f"/TestData_{run.n_obstacles}/"
             init_file_struct("Data/Vehicles/" +save_path)
             self.vehicle_state_history = VehicleStateHistory(save_path, run.run_name)
 
