@@ -83,18 +83,19 @@ def setup_run_list(run_file):
     set_n = run_dict['set_n']
     for rep in range(run_dict['n']):
         for run in run_dict['runs']:
-            run["n"] = rep
-            run["set_n"] = set_n
-            run['run_name'] = f"{run_dict['architecture']}_{run['map_name']}_{set_n}_{rep}"
-            run['architecture'] = f"{run_dict['architecture']}"
-            run['test_name'] = f"{run_dict['test_name']}"
-            run['path'] = f"{run_dict['test_name']}/"
-            run['test_name'] = f"{run_dict['test_name']}"
-            run['racing'] = run_dict['racing']
-
+            # base is to copy everything from the original
             for key in run_dict.keys():
                 if key not in run.keys() and key != "runs":
                     run[key] = run_dict[key]
+
+            run["n"] = rep
+            run["set_n"] = set_n
+            run['test_name'] = f"{run['test_name']}"
+            run['run_name'] = f"{run['architecture']}_{run['map_name']}_{set_n}_{rep}"
+            run['architecture'] = f"{run['architecture']}"
+            run['path'] = f"{run['test_name']}/"
+            run['racing'] = run['racing']
+
             run_list.append(Namespace(**run))
 
 
