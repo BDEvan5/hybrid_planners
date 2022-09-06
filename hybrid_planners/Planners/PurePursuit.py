@@ -290,7 +290,7 @@ class PurePursuit:
     def __init__(self, conf, run):
         self.name = run.run_name
         path = os.getcwd() + f"/Data/Vehicles/" + run.path  + self.name
-        init_file_struct(path)
+        # init_file_struct(path)
 
         self.trajectory = Trajectory(run.map_name)
         self.trajectory.load_csv_centerline()

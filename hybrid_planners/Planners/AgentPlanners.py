@@ -26,6 +26,7 @@ class AgentTrainer:
 
         if run.architecture == "E2e": self.architecture = E2eArchitecture(run, conf)
         elif run.architecture == "Serial": self.architecture = SerialArchitecture(run, conf)
+        elif run.architecture == "Mod": self.architecture = ModArchitecture(run, conf)
         else: raise Exception("Unknown architecture")
 
         self.agent = TD3(self.architecture.state_space, self.architecture.action_space, 1, run.run_name)
@@ -51,6 +52,7 @@ class AgentTrainer:
         if np.isnan(self.nn_act).any():
             print(f"NAN in act: {nn_state}")
 
+        self.architecture.transform_obs(obs) # to ensure correct PP actions
         self.action = self.architecture.transform_action(self.nn_act)
 
         return self.action 
@@ -99,7 +101,8 @@ class AgentTester:
         self.actor = torch.load(self.path + '/' + run.run_name + "_actor.pth")
 
         if run.architecture == "E2e": self.architecture = E2eArchitecture(run, conf)
-        # elif run.architecture == "Serial": self.architecture = SerialArchitecutre()
+        elif run.architecture == "Serial": self.architecture = SerialArchitecture(run, conf)
+        elif run.architecture == "Mod": self.architecture = ModArchitecture(run, conf)
         else: raise Exception("Unknown architecture")
 
         print(f"Agent loaded: {run.run_name}")
