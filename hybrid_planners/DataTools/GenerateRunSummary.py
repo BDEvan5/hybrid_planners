@@ -4,11 +4,11 @@ import glob
 
 
 def generate_summary_table():
-    # folder = "Data/Vehicles/SlowTests/"
-    folder = "Data/Vehicles/FastTests/"
+    folder = "Data/Vehicles/SlowTests/"
+    # folder = "Data/Vehicles/FastTests/"
 
-    map_name = "columbia_small"
-    # map_name = "f1_aut"
+    # map_name = "columbia_small"
+    map_name = "f1_aut"
     folders = glob.glob(folder + f"*_{map_name}*/")
     agents = [f.split("/")[-2] for f in folders]
     agents.sort()

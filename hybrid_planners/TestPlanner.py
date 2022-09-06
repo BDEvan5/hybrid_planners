@@ -45,8 +45,9 @@ class TestSimulation():
             self.map_name = run.map_name
 
             if run.architecture == "PP": self.planner = PurePursuit(self.conf, run)
-            else: self.planner = AgentTrainer(run, self.conf)
-            save_path = run.path + run.run_name + f"/TestData_{run.n_obstacles}/"
+            else: self.planner = AgentTester(run, self.conf)
+            # save_path = run.path + run.run_name + f"/TestData_{run.n_obstacles}/"
+            save_path = run.path + run.run_name + f"/TestData/"
             init_file_struct("Data/Vehicles/" +save_path)
             self.vehicle_state_history = VehicleStateHistory(save_path, run.run_name)
 
@@ -192,8 +193,8 @@ class TestSimulation():
 
 
 def main():
-    sim = TestSimulation("RunPP")
-    # sim = TestSimulation("BenchmarkRuns")
+    # sim = TestSimulation("RunPP")
+    sim = TestSimulation("BenchmarkRuns")
     sim.run_testing_evaluation()
 
 
