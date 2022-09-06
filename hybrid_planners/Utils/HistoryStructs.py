@@ -104,7 +104,8 @@ class TrainHistory():
         plt.clf()
 
         plt.plot(t_steps, self.rewards[0:self.ptr], '.', color='darkblue', markersize=4)
-        plt.plot(t_steps, moving_average(self.rewards[0:self.ptr], 20), linewidth='4', color='r')
+        if self.ptr > 20:
+            plt.plot(t_steps, moving_average(self.rewards[0:self.ptr], 20), linewidth='4', color='r')
         # plt.gca().get_yaxis().set_major_locator(MultipleLocator(10))
 
         plt.xlabel("Training Steps (x100)")
@@ -125,5 +126,32 @@ class TrainHistory():
         plt.tight_layout()
         plt.grid()
         plt.savefig(self.path + "/training_progress_steps.png")
+
+
+class VehicleStateHistory:
+    def __init__(self, full_path, vehicle_name):
+        self.vehicle_name = vehicle_name
+        self.path = "Data/Vehicles/" + full_path # path + vehicle_name+ "/"
+        self.states = []
+        self.actions = []
+    
+
+    def add_state(self, state):
+        self.states.append(state)
+    
+    def add_action(self, action):
+        self.actions.append(action)
+    
+    def save_history(self, lap_n=0):
+        states = np.array(self.states)
+        self.actions.append(np.array([0, 0])) # last action to equal lengths
+        actions = np.array(self.actions)
+
+        lap_history = np.concatenate((states, actions), axis=1)
+
+        np.save(self.path + f"Lap_{lap_n}_history_{self.vehicle_name}.npy", lap_history)
+
+        self.states = []
+        self.actions = []
 
 

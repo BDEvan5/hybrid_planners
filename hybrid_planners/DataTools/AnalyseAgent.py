@@ -301,7 +301,8 @@ class AnalyseTestLapData:
         plt.pause(0.0001)
 
 def analyse_folder():
-    path = "Data/Vehicles/SlowTests/"
+    path = "Data/Vehicles/FastTests/"
+    # path = "Data/Vehicles/SlowTests/"
 
     TestData = AnalyseTestLapData()
     TestData.explore_folder(path)

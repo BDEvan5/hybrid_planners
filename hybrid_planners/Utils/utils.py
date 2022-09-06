@@ -103,17 +103,16 @@ def setup_run_list(run_file):
     return run_list
 
 @njit(cache=True)
-def calculate_speed(delta, f_s=0.9):
+def calculate_speed(delta, f_s=0.8):
     b = 0.523
     g = 9.81
     l_d = 0.329
-    # f_s = 0.7
-    max_v = 6
+    max_v = 7
 
     if abs(delta) < 0.03:
         return max_v
-    if abs(delta) > 0.4:
-        return 0
+    # delta = np.clip(delta, -0.4, 0.4)
+
 
     V = f_s * np.sqrt(b*g*l_d/np.tan(abs(delta)))
 

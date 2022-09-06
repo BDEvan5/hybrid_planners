@@ -5,7 +5,7 @@ from hybrid_planners.TestPlanner import TestSimulation, VehicleStateHistory
 from hybrid_planners.Planners.AgentPlanners import AgentTrainer, AgentTester
 
 import numpy as np
-import time
+import time, torch
 from hybrid_planners.Utils.Reward import *
 
 
@@ -25,7 +25,12 @@ class TrainSimulation(TestSimulation):
 
     def run_training_evaluation(self):
         for run in self.run_data:
-            self.env = F110Env(map=run.map_name)
+            seed = self.conf.random_seed + 10*run.n
+            np.random.seed(seed) # repetition seed
+            torch.use_deterministic_algorithms(True)
+            torch.manual_seed(seed)
+
+            self.env = F110Env(map=run.map_name, seed=seed)
             self.map_name = run.map_name
 
             self.race_track = RaceTrack(run.map_name)

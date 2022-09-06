@@ -4,7 +4,8 @@ import glob
 
 
 def generate_summary_table():
-    folder = "Data/Vehicles/SlowTests/"
+    # folder = "Data/Vehicles/SlowTests/"
+    folder = "Data/Vehicles/FastTests/"
 
     map_name = "columbia_small"
     # map_name = "f1_aut"

@@ -290,11 +290,12 @@ class PurePursuit:
     def __init__(self, conf, run):
         self.name = run.run_name
         path = os.getcwd() + f"/Data/Vehicles/" + run.path  + self.name
-        # init_file_struct(path)
+        if run.architecture == "PP":
+            init_file_struct(path)
 
         self.trajectory = Trajectory(run.map_name)
-        self.trajectory.load_csv_centerline()
-        # self.trajectory.show_pts()
+        if run.racing: self.trajectory.load_csv_track()
+        else: self.trajectory.load_csv_centerline()
 
         self.lookahead = conf.lookahead
         self.v_min_plan = conf.v_min_plan
@@ -317,6 +318,7 @@ class PurePursuit:
         steering_angle = np.clip(steering_angle, -self.max_steer, self.max_steer)
 
         if not self.racing: speed = self.vehicle_speed
+        speed = calculate_speed(steering_angle)
 
         action = np.array([steering_angle, speed])
 

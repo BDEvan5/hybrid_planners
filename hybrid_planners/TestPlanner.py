@@ -6,39 +6,12 @@ from hybrid_planners.Planners.AgentPlanners import AgentTrainer, AgentTester
 
 import numpy as np
 import time
-
+from hybrid_planners.Utils.HistoryStructs import VehicleStateHistory
 
 # settings
 SHOW_TRAIN = False
 SHOW_TEST = True
 VERBOSE = True
-
-
-class VehicleStateHistory:
-    def __init__(self, path, vehicle_name):
-        self.vehicle_name = vehicle_name
-        self.path = "Data/Vehicles/" + path + vehicle_name+ "/"
-        self.states = []
-        self.actions = []
-    
-
-    def add_state(self, state):
-        self.states.append(state)
-    
-    def add_action(self, action):
-        self.actions.append(action)
-    
-    def save_history(self, lap_n=0):
-        states = np.array(self.states)
-        self.actions.append(np.array([0, 0])) # last action to equal lengths
-        actions = np.array(self.actions)
-
-        lap_history = np.concatenate((states, actions), axis=1)
-
-        np.save(self.path + f"Lap_{lap_n}_history_{self.vehicle_name}.npy", lap_history)
-
-        self.states = []
-        self.actions = []
 
 
 class TestSimulation():
@@ -66,8 +39,11 @@ class TestSimulation():
             self.env = F110Env(map=run.map_name)
             self.map_name = run.map_name
 
-            self.planner = AgentTrainer(run, self.conf)
-            self.vehicle_state_history = VehicleStateHistory(run.path, run.run_name)
+            if run.architecture == "PP": self.planner = PurePursuit(self.conf, run)
+            else: self.planner = AgentTrainer(run, self.conf)
+            save_path = run.path + run.run_name + "/TestData/"
+            init_file_struct("Data/Vehicles/" +save_path)
+            self.vehicle_state_history = VehicleStateHistory(save_path, run.run_name)
 
             self.n_test_laps = run.n_test_laps
             self.n_obstacles = run.n_obstacles
@@ -211,11 +187,10 @@ class TestSimulation():
 
 
 def main():
-    sim = TestSimulation("BenchmarkRuns")
+    sim = TestSimulation("RunPP")
+    # sim = TestSimulation("BenchmarkRuns")
     sim.run_testing_evaluation()
 
-    # sim = TrainSimulation("BenchmarkRuns")
-    # sim.run_training_evaluation()
 
 if __name__ == '__main__':
     main()

@@ -195,7 +195,7 @@ class F110Env(gym.Env):
 
         self.poses = []
         self.track_pts, self.track_widths = self.load_centerline()
-
+        self.obs_rng = np.random.default_rng(self.seed)
 
     def __del__(self):
         """
@@ -442,34 +442,21 @@ class F110Env(gym.Env):
         Returns:
             None
         """
-        map_img = np.copy(self.empty_map_img)
-        scan_sim = self.sim.agents[0].scan_simulator
+        ss = self.sim.agents[0].scan_simulator
+        radius = 1
 
         obs_size_m = np.array(obstacle_size)
-        obs_size_px = np.array(obs_size_m / scan_sim.map_resolution, dtype=int)
-        
+        obs_size_px = np.array(obs_size_m / ss.map_resolution, dtype=int)
 
-        # randomly select certain idx's
         min_idx = int(len(self.track_pts) //10)
-        rand_idxs = np.random.randint(min_idx, len(self.track_pts)-min_idx, n_obstacles)
-        radius = 1
-        rand_radii = np.random.rand(n_obstacles, 2)
-        rand_radii = radius * rand_radii
+        rand_idxs = self.obs_rng.integers(min_idx, len(self.track_pts)-min_idx, size=n_obstacles)
+        rand_radii = self.obs_rng.random(size=(n_obstacles, 2)) * radius
 
         obs_locations = self.track_pts[rand_idxs, :] + rand_radii
 
-        # change the values of the img at each obstacle location
-        obs_locations = np.array(obs_locations)
-        for location in obs_locations:
-            # convert the location to the pixel coordinates
-            x = int((location[0] - scan_sim.orig_x) / scan_sim.map_resolution)
-            y = int((location[1] - scan_sim.orig_y) / scan_sim.map_resolution)
-            map_img[y:y+obs_size_px[0], x:x+obs_size_px[1]] = 0
+        new_img = generate_obs_map_img(self.empty_map_img.copy(), obs_locations, ss.orig_x, ss.orig_y, obs_size_px, ss.map_resolution)
+        self.sim.update_map_img(new_img)
 
-        # update the image in the simulator
-        self.sim.update_map_img(map_img)
-
-        # if rendering is on, then add obstacles to the renderer
         if self.renderer is not None:
             self.renderer.add_obstacles(obs_locations, obs_size_m)
 
@@ -559,3 +546,26 @@ class F110Env(gym.Env):
         plt.savefig("Data/Trajectories/" + name + ".png")
 
         plt.show()
+
+
+def generate_obs_map_img(map_img, obs_locations, orig_x, orig_y, obs_size_px, map_resolution):
+    """Adds obstacles of the defined size to the map image.
+
+    Args:
+        map_img (nd array): image of the map image
+        obs_locations (ndarray): set of coords in pixels
+        orig_x (float): x offset to map original
+        orig_y (float): y offset to map original
+        obs_size_px (ndarray): 2x1 set of obs size in px
+        map_resolution (float): meters to pixel resolution  
+
+    Returns:
+        map_img (ndarray): image with obstacles added
+    """
+    for location in obs_locations:
+        # convert the location to the pixel coordinates
+        x = int((location[0] - orig_x) / map_resolution)
+        y = int((location[1] - orig_y) / map_resolution)
+        map_img[y:y+obs_size_px[0], x:x+obs_size_px[1]] = 0
+
+    return map_img

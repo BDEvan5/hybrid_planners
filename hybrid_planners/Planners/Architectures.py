@@ -20,7 +20,11 @@ class E2eArchitecture:
         self.vehicle_speed = conf.vehicle_speed
 
         self.action_space = 1
-        if run.racing: self.action_space += 2
+        self.racing = run.racing
+
+        self.n_scans = conf.n_scans
+        self.scan_buffer = np.zeros((self.n_scans, self.n_beams))
+        self.state_space *= self.n_scans
 
     def transform_obs(self, obs):
         """
@@ -32,18 +36,26 @@ class E2eArchitecture:
         Returns:
             nn_obs: observation vector for neural network
         """
-
+            
         scan = np.array(obs['scan']) 
         scaled_scan = scan/self.range_finder_scale
-
         scan = np.clip(scaled_scan, 0, 1)
 
-        return scan
+        if self.scan_buffer.all() ==0: # first reading
+            for i in range(self.n_scans):
+                self.scan_buffer[i, :] = scan 
+        else:
+            self.scan_buffer = np.roll(self.scan_buffer, 1, axis=0)
+            self.scan_buffer[0, :] = scan
+
+        nn_obs = np.reshape(self.scan_buffer, (self.n_beams * self.n_scans))
+
+        return nn_obs
 
     def transform_action(self, nn_action):
         steering_angle = nn_action[0] * self.max_steer
         if self.action_space == 2:
-            speed = (nn_action[1] + 1) * (self.max_v  / 2 - 0.5) + 1
+            speed = calculate_speed(steering_angle)
         else:
             speed = self.vehicle_speed
 
@@ -62,9 +74,13 @@ class SerialArchitecture:
         self.vehicle_speed = conf.vehicle_speed
 
         self.action_space = 1
-        if run.racing: self.action_space += 2
+        self.racing = run.racing
 
         self.pp_planner = PurePursuit(conf, run)
+
+        self.n_scans = conf.n_scans
+        self.scan_buffer = np.zeros((self.n_scans, self.state_space))
+        self.state_space *= self.n_scans
 
     def transform_obs(self, obs):
         """
@@ -83,7 +99,16 @@ class SerialArchitecture:
         scan = np.clip(scaled_scan, 0, 1)
         pp_steering = self.pp_planner.plan(obs)
 
-        nn_obs = np.concatenate((scan, np.array([pp_steering[0]])))
+        current_obs = np.concatenate((scan, np.array([pp_steering[0]])))
+
+        if self.scan_buffer.all() ==0: # first reading
+            for i in range(self.n_scans):
+                self.scan_buffer[i, :] = current_obs 
+        else:
+            self.scan_buffer = np.roll(self.scan_buffer, 1, axis=0)
+            self.scan_buffer[0, :] = current_obs
+
+        nn_obs = np.reshape(self.scan_buffer, (self.state_space))
 
         return nn_obs
 
@@ -91,8 +116,8 @@ class SerialArchitecture:
         steering_angle = nn_action[0] * self.max_steer
         if np.isnan(steering_angle):
             print(f"Steering Nannnnn")
-        if self.action_space == 2:
-            speed = (nn_action[1] + 1) * (self.max_v  / 2 - 0.5) + 1
+        if self.racing:
+            speed = calculate_speed(steering_angle)
         else:
             speed = self.vehicle_speed
 
@@ -111,10 +136,14 @@ class ModArchitecture:
         self.vehicle_speed = conf.vehicle_speed
 
         self.action_space = 1
-        if run.racing: self.action_space += 2
+        self.racing = run.racing
 
         self.pp_planner = PurePursuit(conf, run)
         self.pp_steering = 0
+
+        self.n_scans = conf.n_scans
+        self.scan_buffer = np.zeros((self.n_scans, self.state_space))
+        self.state_space *= self.n_scans
 
     def transform_obs(self, obs):
         """
@@ -133,7 +162,16 @@ class ModArchitecture:
         scan = np.clip(scaled_scan, 0, 1)
         self.pp_steering = self.pp_planner.plan(obs)[0]
 
-        nn_obs = np.concatenate((scan, np.array([self.pp_steering])))
+        current_obs = np.concatenate((scan, np.array([self.pp_steering])))
+
+        if self.scan_buffer.all() ==0: # first reading
+            for i in range(self.n_scans):
+                self.scan_buffer[i, :] = current_obs 
+        else:
+            self.scan_buffer = np.roll(self.scan_buffer, 1, axis=0)
+            self.scan_buffer[0, :] = current_obs
+
+        nn_obs = np.reshape(self.scan_buffer, (self.state_space))
 
         return nn_obs
 
@@ -141,8 +179,8 @@ class ModArchitecture:
         steering_angle = nn_action[0] * self.max_steer + self.pp_steering
         if np.isnan(steering_angle):
             print(f"Steering Nannnnn")
-        if self.action_space == 2:
-            speed = (nn_action[1] + 1) * (self.max_v  / 2 - 0.5) + 1
+        if self.racing:
+            speed = calculate_speed(steering_angle)
         else:
             speed = self.vehicle_speed
 
