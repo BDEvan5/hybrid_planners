@@ -6,33 +6,33 @@ test_name: "BigSlowTests" # the series of tests being run in thesis
 # architecture: "E2e"
 # architecture: "Serial"
 # architecture: "Mod"
-# architecture: "PP"
-
+architecture: "PP"
+# architecture: "FTG"
 
 n: 10
 set_n: 1
-random_seed: 100
+random_seed: 1000
 
 n_train_steps: 50000
 # n_test_laps: 2
-n_test_laps: 500
+n_test_laps: 100
 
-n_obstacles: 6
+n_obstacles: 4
 # racing: True
 racing: False
 
 # map_name: "columbia_small"
-map_name: "f1_aut"
+# map_name: "f1_aut"
 # map_name: "f1_gbr"
 
 runs:
-  # - map_name: "f1_aut"
+  - map_name: "f1_aut"
   # - map_name: "f1_mco"
   # - map_name: "f1_esp"
   # - map_name: "f1_gbr"
   # - map_name: "columbia_small"
 
-  - architecture: "E2e"
+  # - architecture: "E2e"
   # - architecture: "Serial"
   # - architecture: "Mod"
 

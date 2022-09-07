@@ -46,6 +46,7 @@ class TestSimulation():
             self.map_name = run.map_name
 
             if run.architecture == "PP": self.planner = PurePursuit(self.conf, run)
+            elif run.architecture == "FTG": self.planner = FollowTheGap(self.conf, run)
             else: self.planner = AgentTester(run, self.conf)
             # save_path = run.path + run.run_name + f"/TestData_{run.n_obstacles}/"
             save_path = run.path + run.run_name + f"/TestData_test/"

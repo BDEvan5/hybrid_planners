@@ -56,6 +56,7 @@ class TrainSimulation(TestSimulation):
             self.lap_times = []
             self.completed_laps = 0
 
+            self.env = F110Env(map=run.map_name, seed=seed)
             eval_dict = self.run_testing()
             run_dict = vars(run)
             run_dict.update(eval_dict)

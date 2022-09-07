@@ -92,8 +92,8 @@ class AnalyseTestLapData:
             # seed = 100
             self.obs_rng = np.random.default_rng(seed)
             for _ in range(len(p)+1):
-                rand_idxs = self.obs_rng.integers(13, 120, size=6)
-                rand_radii = self.obs_rng.random(size=(6, 2)) 
+                _b = self.obs_rng.integers(13, 120, size=6)
+                _a = self.obs_rng.random(size=(6, 2)) 
 
 
             # for self.lap_n in range(2):

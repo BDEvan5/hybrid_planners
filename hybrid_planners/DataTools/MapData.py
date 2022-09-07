@@ -136,12 +136,10 @@ class MapData:
 
         min_idx = int(len(track_pts) //10)
         rand_idxs = rng.integers(min_idx, len(track_pts)-min_idx, size=n_obstacles)
-        print(f"Rand inds: {rand_idxs}")
 
         rand_radii = rng.random(size=(n_obstacles, 2)) * radius
 
         obs_locations = track_pts[rand_idxs, :] + rand_radii
-        print(f"Obs locations: {obs_locations}")
 
         new_img = self.map_img.copy()
         new_img[new_img == 1] = 180

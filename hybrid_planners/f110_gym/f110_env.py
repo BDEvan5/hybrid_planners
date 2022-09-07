@@ -429,7 +429,7 @@ class F110Env(gym.Env):
 
         return center_pts, widths
 
-    def add_obstacles(self, n_obstacles, obstacle_size=[0.7, 0.7]):
+    def add_obstacles(self, n_obstacles, obstacle_size=[0.3, 0.3]):
         """
         Adds a set number of obstacles to the envioronment using the track centerline. 
         Note: this function requires a csv file with the centerline points in it which can be loaded. 
@@ -450,11 +450,10 @@ class F110Env(gym.Env):
 
         min_idx = int(len(self.track_pts) //10)
         rand_idxs = self.obs_rng.integers(min_idx, len(self.track_pts)-min_idx, size=n_obstacles)
-        print(f"Rand inds: {rand_idxs}")
-        rand_radii = self.obs_rng.random(size=(n_obstacles, 2)) * radius
+        rand_radii = self.obs_rng.random(size=(n_obstacles, 2)) -0.5
+        rand_radii *= radius 
 
         obs_locations = self.track_pts[rand_idxs, :] + rand_radii
-        print(f"Obs locations: {obs_locations}")
         new_img = generate_obs_map_img(self.empty_map_img.copy(), obs_locations, ss.orig_x, ss.orig_y, obs_size_px, ss.map_resolution)
         self.sim.update_map_img(new_img)
 
