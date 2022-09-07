@@ -46,8 +46,10 @@ class TrainSimulation(TestSimulation):
 
             #Test
             self.planner = AgentTester(run, self.conf)
-
-            self.vehicle_state_history = VehicleStateHistory(run.path, run.run_name)
+            save_path = run.path + run.run_name + f"/TestData/"
+            init_file_struct("Data/Vehicles/" +save_path)
+            self.vehicle_state_history = VehicleStateHistory(save_path, run.run_name)
+            # self.vehicle_state_history = VehicleStateHistory(run.path, run.run_name)
 
             self.n_test_laps = run.n_test_laps
 

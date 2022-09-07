@@ -51,11 +51,11 @@ class AnalyseTestLapData:
             self.race_track.load_centerline()
 
             # for self.lap_n in range(2):
-            for self.lap_n in range(10):
+            for self.lap_n in range(500):
                 if not self.load_lap_data(): break # no more laps
                 self.calculate_lap_statistics()
                 # self.generate_steering_graphs()
-                self.plot_curvature_heat_map()
+                # self.plot_curvature_heat_map()
 
                 # self.plot_velocity_heat_map()
                 # self.plot_friction_graphs()
@@ -64,7 +64,7 @@ class AnalyseTestLapData:
 
     def load_lap_data(self):
         try:
-            data = np.load(self.path + f"Lap_{self.lap_n}_history_{self.vehicle_name}.npy")
+            data = np.load(self.path + "TestData/" + f"Lap_{self.lap_n}_history_{self.vehicle_name}.npy")
             # data = np.load(self.path + f"Lap_{self.lap_n}_history_{self.vehicle_name}_{self.map_name}.npy")
         except Exception as e:
             print(e)
@@ -301,7 +301,8 @@ class AnalyseTestLapData:
         plt.pause(0.0001)
 
 def analyse_folder():
-    path = "Data/Vehicles/FastTests/"
+    path = "Data/Vehicles/BigSlowTests/"
+    # path = "Data/Vehicles/FastTests/"
     # path = "Data/Vehicles/SlowTests/"
 
     TestData = AnalyseTestLapData()

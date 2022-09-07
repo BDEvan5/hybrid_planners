@@ -170,15 +170,15 @@ class TestData:
     def generate_time_distribution(self):
         time_list = [l.time for l in self.laps if l.progress > 0.99]
 
-        plt.figure(1)
+        plt.figure(1, figsize=(2.2, 2.2))
         plt.clf()
         plt.hist(time_list, bins=15)
 
-        # plt.title(f"Time distribution for {self.vehicle_name}")
+        plt.title(self.vehicle_name.split("_")[0])
         plt.xlabel("Time (s)")
-        plt.ylabel("Frequency")
-        plt.xlim(38, 41)
-        plt.ylim(0, 20)
+        # plt.ylabel("Frequency")
+        # plt.xlim(38, 41)
+        # plt.ylim(0, 20)
 
         plt.grid(True)
         plt.tight_layout()
@@ -219,13 +219,15 @@ class TestData:
 
 
 def make_thesis_dist():
-    map_name = "columbia_small"
+    map_name = "f1_aut"
+    # map_name = "columbia_small"
     planners = ["E2e", "Mod", "Serial"]
+    folder = "Data/Vehicles/BigSlowTests/"
     # planner = "E2e"
     # planner = "Mod"
     # planner = "Serial"
     for planner in planners:
-        path = f"Data/Vehicles/SlowTests/{planner}_{map_name}_1_0/TestData/"
+        path = folder + f"{planner}_{map_name}_1_0/TestData/"
 
         td = TestData(path)
         # td.load_test_data()
