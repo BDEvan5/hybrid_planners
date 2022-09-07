@@ -10,7 +10,7 @@ from hybrid_planners.Utils.HistoryStructs import VehicleStateHistory
 
 # settings
 SHOW_TRAIN = False
-SHOW_TEST = False
+SHOW_TEST = True
 VERBOSE = True
 
 
@@ -36,7 +36,8 @@ class TestSimulation():
 
     def run_testing_evaluation(self):
         for run in self.run_data:
-            seed = run.random_seed + 10*run.n
+            # seed = run.random_seed + 10*run.n
+            seed = 100
             np.random.seed(seed) # repetition seed
             torch.use_deterministic_algorithms(True)
             torch.manual_seed(seed)
@@ -47,7 +48,7 @@ class TestSimulation():
             if run.architecture == "PP": self.planner = PurePursuit(self.conf, run)
             else: self.planner = AgentTester(run, self.conf)
             # save_path = run.path + run.run_name + f"/TestData_{run.n_obstacles}/"
-            save_path = run.path + run.run_name + f"/TestData/"
+            save_path = run.path + run.run_name + f"/TestData_test/"
             init_file_struct("Data/Vehicles/" +save_path)
             self.vehicle_state_history = VehicleStateHistory(save_path, run.run_name)
 

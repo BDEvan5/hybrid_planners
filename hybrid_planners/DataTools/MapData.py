@@ -125,7 +125,54 @@ class MapData:
 
         plt.show()
 
+    def plot_map_img_obs(self, rng):
+        obstacle_size=[0.7, 0.7]
+        n_obstacles = 6
+        track_pts = np.array([self.xs, self.ys]).T
+        radius = 1
 
+        obs_size_m = np.array(obstacle_size)
+        obs_size_px = np.array(obs_size_m / self.map_resolution, dtype=int)
+
+        min_idx = int(len(track_pts) //10)
+        rand_idxs = rng.integers(min_idx, len(track_pts)-min_idx, size=n_obstacles)
+        print(f"Rand inds: {rand_idxs}")
+
+        rand_radii = rng.random(size=(n_obstacles, 2)) * radius
+
+        obs_locations = track_pts[rand_idxs, :] + rand_radii
+        print(f"Obs locations: {obs_locations}")
+
+        new_img = self.map_img.copy()
+        new_img[new_img == 1] = 180
+        new_img[new_img == 0 ] = 230
+        new_img[0, 1] = 255
+        new_img[0, 0] = 0
+        new_img = generate_obs_map_img(new_img, obs_locations, self.map_origin[0], self.map_origin[1], obs_size_px, self.map_resolution)
+
+        plt.imshow(new_img, origin='lower', cmap='gray')
+
+def generate_obs_map_img(map_img, obs_locations, orig_x, orig_y, obs_size_px, map_resolution):
+    """Adds obstacles of the defined size to the map image.
+
+    Args:
+        map_img (nd array): image of the map image
+        obs_locations (ndarray): set of coords in pixels
+        orig_x (float): x offset to map original
+        orig_y (float): y offset to map original
+        obs_size_px (ndarray): 2x1 set of obs size in px
+        map_resolution (float): meters to pixel resolution  
+
+    Returns:
+        map_img (ndarray): image with obstacles added
+    """
+    for location in obs_locations:
+        # convert the location to the pixel coordinates
+        x = int((location[0] - orig_x) / map_resolution)
+        y = int((location[1] - orig_y) / map_resolution)
+        map_img[y:y+obs_size_px[0], x:x+obs_size_px[1]] = 0
+
+    return map_img
 
 
 def main():

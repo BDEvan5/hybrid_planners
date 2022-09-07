@@ -450,10 +450,11 @@ class F110Env(gym.Env):
 
         min_idx = int(len(self.track_pts) //10)
         rand_idxs = self.obs_rng.integers(min_idx, len(self.track_pts)-min_idx, size=n_obstacles)
+        print(f"Rand inds: {rand_idxs}")
         rand_radii = self.obs_rng.random(size=(n_obstacles, 2)) * radius
 
         obs_locations = self.track_pts[rand_idxs, :] + rand_radii
-
+        print(f"Obs locations: {obs_locations}")
         new_img = generate_obs_map_img(self.empty_map_img.copy(), obs_locations, ss.orig_x, ss.orig_y, obs_size_px, ss.map_resolution)
         self.sim.update_map_img(new_img)
 

@@ -13,6 +13,37 @@ from hybrid_planners.DataTools.MapData import MapData
 from hybrid_planners.Utils.Reward import RaceTrack 
 from hybrid_planners.Utils.utils import *
 
+
+def load_csv_data(path):
+    """loads data from a csv training file
+
+    Args:   
+        path (file_path): path to the agent
+
+    Returns:
+        rewards: ndarray of rewards
+        lengths: ndarray of episode lengths
+        progresses: ndarray of track progresses
+        laptimes: ndarray of laptimes
+    """
+    rewards, lengths, progresses, laptimes = [], [], [], []
+    with open(f"{path}training_data_episodes.csv", "r") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if float(row[2]) > 0:
+                rewards.append(float(row[1]))
+                lengths.append(float(row[2]))
+                progresses.append(float(row[3]))
+                # laptimes.append(float(row[4]))
+
+    rewards = np.array(rewards)
+    lengths = np.array(lengths)
+    progresses = np.array(progresses)
+    laptimes = np.array(laptimes)
+    
+    return rewards, lengths, progresses, laptimes
+
+
 class AnalyseTestLapData:
     def __init__(self):
         self.path = None
@@ -30,9 +61,11 @@ class AnalyseTestLapData:
         print(f"{len(vehicle_folders)} folders found")
 
         for j, self.path in enumerate(vehicle_folders):
+            if j >5: break
             print(f"Vehicle folder being opened: {self.path}")
             # init_file_struct(self.summary_path + "SteeringDists/")
-            init_file_struct(self.path + "Curvatures/")
+            init_file_struct(self.path + "Trajectories/")
+            # init_file_struct(self.path + "Curvatures/")
             # init_file_struct(self.path + "Hists/")
             # init_file_struct(self.path + "Velocities/")
             # init_file_struct(self.path + "FrictionPlots/")
@@ -50,15 +83,29 @@ class AnalyseTestLapData:
             self.race_track = RaceTrack(self.map_name)
             self.race_track.load_centerline()
 
+            _, _, p, _ = load_csv_data(self.path)
+            print(f"{len(p)}")
+
+            n = self.vehicle_name.split("_")[-2]
+            i = self.vehicle_name.split("_")[-1].split(".")[0]
+            seed =  100 + int(i) * 10
+            # seed = 100
+            self.obs_rng = np.random.default_rng(seed)
+            for _ in range(len(p)+1):
+                rand_idxs = self.obs_rng.integers(13, 120, size=6)
+                rand_radii = self.obs_rng.random(size=(6, 2)) 
+
+
             # for self.lap_n in range(2):
-            for self.lap_n in range(500):
+            for self.lap_n in range(10):
                 if not self.load_lap_data(): break # no more laps
-                self.calculate_lap_statistics()
+                # self.calculate_lap_statistics()
                 # self.generate_steering_graphs()
                 # self.plot_curvature_heat_map()
 
                 # self.plot_velocity_heat_map()
                 # self.plot_friction_graphs()
+                self.plot_obs_graphs()
 
             self.generate_summary_stats()
 
@@ -72,6 +119,8 @@ class AnalyseTestLapData:
             return 0
         self.states = data[:, :7]
         self.actions = data[:, 7:]
+
+
 
         return 1 # to say success
 
@@ -299,6 +348,23 @@ class AnalyseTestLapData:
         # plt.plot(ks)
 
         plt.pause(0.0001)
+
+
+    def plot_obs_graphs(self):
+        plt.figure(1)
+        plt.clf()
+        self.map_data.plot_map_img_obs(self.obs_rng)
+        points = self.states[:, 0:2]
+        
+        xs, ys = self.map_data.pts2rc(points)
+        plt.plot(xs, ys, 'b-')
+
+        plt.show()
+
+        # plt.savefig(self.path + f"Trajectories/{self.vehicle_name}_curve_map_{self.lap_n}.svg", bbox_inches='tight')
+        # plt.savefig(self.path + f"Curvatures/Curvature_{self.lap_n}_{self.vehicle_name}.pdf", bbox_inches='tight', pad_inches=0)
+
+
 
 def analyse_folder():
     path = "Data/Vehicles/BigSlowTests/"
