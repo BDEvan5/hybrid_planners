@@ -25,7 +25,7 @@ class TrainSimulation(TestSimulation):
 
     def run_training_evaluation(self):
         for run in self.run_data:
-            seed = self.conf.random_seed + 10*run.n
+            seed = run.random_seed + 10*run.n
             np.random.seed(seed) # repetition seed
             torch.use_deterministic_algorithms(True)
             torch.manual_seed(seed)

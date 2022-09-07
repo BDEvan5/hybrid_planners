@@ -1,6 +1,6 @@
 # test_name: "Benchmark" # the series of tests being run in thesis
 # test_name: "FastTests" # the series of tests being run in thesis
-test_name: "SlowTests" # the series of tests being run in thesis
+test_name: "BigSlowTests" # the series of tests being run in thesis
 
 # architecture: "E2e"
 # architecture: "Serial"
@@ -8,20 +8,21 @@ test_name: "SlowTests" # the series of tests being run in thesis
 # architecture: "PP"
 
 
-n: 1
+n: 10
 set_n: 1
-random_seed: 1000
+random_seed: 100
 
-# n_train_steps: 50000
+n_train_steps: 50000
 # n_test_laps: 2
-n_test_laps: 100
+n_test_laps: 500
 
 n_obstacles: 6
 # racing: True
 racing: False
 
-map_name: "columbia_small"
+# map_name: "columbia_small"
 # map_name: "f1_aut"
+map_name: "f1_gbr"
 
 runs:
   # - map_name: "f1_aut"
