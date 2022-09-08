@@ -11,19 +11,19 @@ test_name: "devel"
 # architecture: "FTG"
 
 n: 1
-set_n: 1
-random_seed: 1000
+set_n: 3
+random_seed: 2000
 
-n_train_steps: 100000
+n_train_steps: 50000
 # n_test_laps: 2
 n_test_laps: 100
 
-n_obstacles: 4
+n_obstacles: 8
 # racing: True
 racing: False
 
-# map_name: "columbia_small"
-map_name: "f1_aut"
+map_name: "columbia_small"
+# map_name: "f1_aut"
 # map_name: "f1_gbr"
 
 runs:

@@ -36,8 +36,8 @@ class TestSimulation():
 
     def run_testing_evaluation(self):
         for run in self.run_data:
-            # seed = run.random_seed + 10*run.n
-            seed = 100
+            seed = run.random_seed + 10*run.n
+            # seed = 100
             np.random.seed(seed) # repetition seed
             torch.use_deterministic_algorithms(True)
             torch.manual_seed(seed)

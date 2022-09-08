@@ -291,14 +291,6 @@ class AnalyseTestLapData:
         plt.gca().set_aspect('equal', adjustable='box')
 
         
-        plt.xticks([])
-        plt.yticks([])
-        plt.tight_layout()
-        ax = plt.gca()
-        ax.spines['top'].set_visible(False)
-        ax.spines['right'].set_visible(False)
-        ax.spines['bottom'].set_visible(False)
-        ax.spines['left'].set_visible(False)
 
         # plt.show()
 

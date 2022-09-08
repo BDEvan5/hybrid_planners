@@ -42,6 +42,7 @@ class E2eArchitecture:
         """
             
         scan = np.array(obs['scan']) 
+
         # plt.figure(1)
         # plt.clf()
         # plt.plot(scan*self.sines, scan*self.cosines, 'b.')
@@ -59,6 +60,17 @@ class E2eArchitecture:
         else:
             self.scan_buffer = np.roll(self.scan_buffer, 1, axis=0)
             self.scan_buffer[0, :] = scan
+
+        # fig, ax = plt.subplots(1, self.n_scans, num=1)
+        # for i in range(self.n_scans):
+        #     ax[i].cla()
+        #     ax[i].plot(self.scan_buffer[i]*self.sines, self.scan_buffer[i]*self.cosines)
+        #     ax[i].set_title(f"Scan {i}")
+        #     ax[i].set_xlim(-0.5, 0.5)
+        #     ax[i].set_ylim(0, 1.1)
+        # plt.pause(0.000001)
+        # plt.show()
+
 
         nn_obs = np.reshape(self.scan_buffer, (self.n_beams * self.n_scans))
 

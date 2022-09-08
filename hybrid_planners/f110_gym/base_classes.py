@@ -443,7 +443,7 @@ class Simulator(object):
 
         # initializing agents
         fov = np.pi 
-        n_beams = 40
+        n_beams = 60
         #TODO: addin a parameter file for each car that can be passed on
         for i in range(self.num_agents):
             if i == ego_idx:
