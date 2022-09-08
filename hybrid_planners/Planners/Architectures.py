@@ -26,6 +26,10 @@ class E2eArchitecture:
         self.scan_buffer = np.zeros((self.n_scans, self.n_beams))
         self.state_space *= self.n_scans
 
+        self.angles = np.linspace(np.pi/2 * 0.7, -np.pi/2 * 0.7, self.n_beams)
+        self.sines = np.sin(self.angles)
+        self.cosines = np.cos(self.angles)
+
     def transform_obs(self, obs):
         """
         Transforms the observation received from the environment into a vector which can be used with a neural network.
@@ -38,8 +42,16 @@ class E2eArchitecture:
         """
             
         scan = np.array(obs['scan']) 
+        # plt.figure(1)
+        # plt.clf()
+        # plt.plot(scan*self.sines, scan*self.cosines, 'b.')
+        # plt.plot(0, 0, 'ro')
+        # plt.xlim(-2, 2)
+        # plt.ylim(-1, 10)
+        # plt.pause(0.000001)
         scaled_scan = scan/self.range_finder_scale
         scan = np.clip(scaled_scan, 0, 1)
+
 
         if self.scan_buffer.all() ==0: # first reading
             for i in range(self.n_scans):

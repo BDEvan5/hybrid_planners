@@ -443,7 +443,7 @@ class Simulator(object):
 
         # initializing agents
         fov = np.pi 
-        n_beams = 1080
+        n_beams = 40
         #TODO: addin a parameter file for each car that can be passed on
         for i in range(self.num_agents):
             if i == ego_idx:
@@ -518,7 +518,6 @@ class Simulator(object):
         for i in range(self.num_agents):
             all_vertices[i, :, :] = get_vertices(np.append(self.agents[i].state[0:2],self.agents[i].state[4]), self.params['length'], self.params['width'])
         self.collisions, self.collision_idx = collision_multiple(all_vertices)
-
 
     def step(self, control_inputs):
         """
@@ -603,3 +602,5 @@ class Simulator(object):
         for i in range(self.num_agents):
             # self.agents[i].reset(np.zeros(3))
            self.agents[i].reset(poses[i, :])
+
+

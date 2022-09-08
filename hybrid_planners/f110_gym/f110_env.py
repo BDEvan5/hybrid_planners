@@ -454,8 +454,18 @@ class F110Env(gym.Env):
         rand_radii *= radius 
 
         obs_locations = self.track_pts[rand_idxs, :] + rand_radii
+        # print(f"Obs locations: {obs_locations}")
+        # print(f"Obs size: {obs_size_px}")
+        # print(f"Map res: {ss.map_resolution}")
+        # print(f"Map x: {ss.orig_x}")
         new_img = generate_obs_map_img(self.empty_map_img.copy(), obs_locations, ss.orig_x, ss.orig_y, obs_size_px, ss.map_resolution)
         self.sim.update_map_img(new_img)
+
+        # fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(10, 5))
+        # ax1.imshow(self.empty_map_img, origin='lower')
+        # ax2.imshow(new_img, origin='lower')
+        # ax3.imshow(new_img - self.empty_map_img, origin='lower')
+        # plt.show()
 
         if self.renderer is not None:
             self.renderer.add_obstacles(obs_locations, obs_size_m)
@@ -548,6 +558,7 @@ class F110Env(gym.Env):
         plt.show()
 
 
+#TODO: njit this function
 def generate_obs_map_img(map_img, obs_locations, orig_x, orig_y, obs_size_px, map_resolution):
     """Adds obstacles of the defined size to the map image.
 
@@ -562,10 +573,13 @@ def generate_obs_map_img(map_img, obs_locations, orig_x, orig_y, obs_size_px, ma
     Returns:
         map_img (ndarray): image with obstacles added
     """
+    map_img = map_img.copy()
     for location in obs_locations:
         # convert the location to the pixel coordinates
         x = int((location[0] - orig_x) / map_resolution)
         y = int((location[1] - orig_y) / map_resolution)
+        # print(f"x: {x}, y: {y}")
         map_img[y:y+obs_size_px[0], x:x+obs_size_px[1]] = 0
+        # map_img != 
 
     return map_img

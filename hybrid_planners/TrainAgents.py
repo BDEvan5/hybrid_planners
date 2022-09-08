@@ -10,8 +10,8 @@ from hybrid_planners.Utils.Reward import *
 
 
 # settings
-# SHOW_TRAIN = True
-SHOW_TRAIN = False
+SHOW_TRAIN = True
+# SHOW_TRAIN = False
 SHOW_TEST = False
 VERBOSE = True
 

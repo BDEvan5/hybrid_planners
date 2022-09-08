@@ -196,24 +196,26 @@ class CrossTrackHeadReward:
         self.race_track = race_track
         self.r_veloctiy = conf.r_velocity
         self.r_distance = conf.r_distance
+        self.max_v = conf.max_v
 
     def __call__(self, observation, prev_obs):
         if observation['lap_done']:
             return 1  # complete
         if observation['colision_done']:
             return -1 # crash
+
         position = observation['state'][0:2]
         theta = observation['state'][2]
         heading, distance = self.race_track.get_cross_track_heading(position)
         # self.race_track.plot_vehicle(position, theta)
 
         d_heading = abs(robust_angle_difference_rad(heading, theta))
-        r_heading  = d_heading  * self.r_veloctiy # velocity
-        r_heading *= observation['state'][3]
+        r_heading  = np.cos(d_heading)  * self.r_veloctiy # velocity
+        r_heading *= (observation['state'][3] / self.max_v)
 
         r_distance = distance * self.r_distance
 
-        reward =  np.cos(r_heading) - r_distance
+        reward = r_heading - r_distance
         return reward
 
 def robust_angle_difference_degree(x, y):
