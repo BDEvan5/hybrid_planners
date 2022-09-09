@@ -450,7 +450,7 @@ class F110Env(gym.Env):
         obs_size_px = np.array(obs_size_m / ss.map_resolution, dtype=int)
 
         min_idx = int(len(self.track_pts) //10)
-        print(min_idx, len(self.track_pts))
+        # print(min_idx, len(self.track_pts))
 
         rand_idxs = self.obs_rng.integers(min_idx, len(self.track_pts)-min_idx, size=n_obstacles)
         rand_radii = self.obs_rng.random(size=(n_obstacles, 2)) -0.5
@@ -463,13 +463,13 @@ class F110Env(gym.Env):
         # print(f"Map x: {ss.orig_x}")
         new_img = generate_obs_map_img(self.empty_map_img.copy(), obs_locations, ss.orig_x, ss.orig_y, obs_size_px, ss.map_resolution)
 
-        plt.figure(1)
-        plt.clf()
-        plt.imshow(new_img, origin='lower')
-        plt.title(f"{obs_locations}")
-        plt.pause(0.001)
-        plt.savefig(f"Data/sim_imgs/obs_map_{self.counter}.png")
-        self.counter += 1
+        # plt.figure(1)
+        # plt.clf()
+        # plt.imshow(new_img, origin='lower')
+        # plt.title(f"{obs_locations}")
+        # plt.pause(0.001)
+        # plt.savefig(f"Data/sim_imgs/obs_map_{self.counter}.png")
+        # self.counter += 1
 
         self.sim.update_map_img(new_img)
 

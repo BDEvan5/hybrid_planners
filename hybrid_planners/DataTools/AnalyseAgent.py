@@ -64,6 +64,9 @@ class AnalyseTestLapData:
             # if j >5: break
             print(f"Vehicle folder being opened: {self.path}")
             # init_file_struct(self.summary_path + "SteeringDists/")
+            v_path = self.path + "Trajectories/"
+            if os.path.exists(v_path):
+                continue
             init_file_struct(self.path + "Trajectories/")
             # init_file_struct(self.path + "Curvatures/")
             # init_file_struct(self.path + "Hists/")
@@ -83,12 +86,9 @@ class AnalyseTestLapData:
             self.race_track = RaceTrack(self.map_name)
             self.race_track.load_centerline()
 
-            _, _, p, _ = load_csv_data(self.path)
-            # print(f"{len(p)}")
-
-            n = self.vehicle_name.split("_")[-2]
-            # i = self.vehicle_name.split("_")[-1].split(".")[0]
-            seed =  3000 #+ int(i) * 10
+            # n = self.vehicle_name.split("_")[-2]
+            i = self.vehicle_name.split("_")[-1].split(".")[0]
+            seed =  10000 + int(i) * 10
             # seed = 100
             self.obs_rng = np.random.default_rng(seed)
             # for _ in range(len(p)+1):
@@ -360,8 +360,8 @@ class AnalyseTestLapData:
 
 
 def analyse_folder():
-    path = "Data/Vehicles/devel2fast/"
-    # path = "Data/Vehicles/FastTests/"
+    # path = "Data/Vehicles/devel2fast/"
+    path = "Data/Vehicles/FastTests/"
     # path = "Data/Vehicles/SlowTests/"
 
     TestData = AnalyseTestLapData()

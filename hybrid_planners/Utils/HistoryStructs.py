@@ -98,6 +98,7 @@ class TrainHistory():
         plot_data(self.rewards[0:self.ptr], figure_n=2)
         plt.figure(2)
         plt.savefig(self.path + "/training_rewards_episodes.png")
+        plt.close()
 
         t_steps = np.cumsum(self.lengths[0:self.ptr])/100
         plt.figure(3)
@@ -126,6 +127,8 @@ class TrainHistory():
         plt.tight_layout()
         plt.grid()
         plt.savefig(self.path + "/training_progress_steps.png")
+
+        plt.close()
 
 
 class VehicleStateHistory:

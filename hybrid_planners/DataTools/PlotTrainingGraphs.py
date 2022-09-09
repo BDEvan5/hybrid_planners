@@ -100,7 +100,7 @@ def plot_reward_steps(path):
 
 # Slow tests
 def slow_progress_training_comparision():
-    p = "Data/Vehicles/SlowTests/"
+    p = "Data/Vehicles/FastTests/"
 
     e2e_steps = []
     e2e_progresses = []
@@ -112,7 +112,7 @@ def slow_progress_training_comparision():
     map_name = "columbia_small"
     # map_name = "f1_aut"
 
-    for i in range(5):
+    for i in range(3):
         path_e2e = p + f"E2e_{map_name}_1_{i}/"
         path_serial = p + f"Serial_{map_name}_1_{i}/"
         path_mod = p + f"Mod_{map_name}_1_{i}/"
