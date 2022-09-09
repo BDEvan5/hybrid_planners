@@ -88,7 +88,7 @@ class AnalyseTestLapData:
 
             n = self.vehicle_name.split("_")[-2]
             # i = self.vehicle_name.split("_")[-1].split(".")[0]
-            seed =  10000 #+ int(i) * 10
+            seed =  3000 #+ int(i) * 10
             # seed = 100
             self.obs_rng = np.random.default_rng(seed)
             # for _ in range(len(p)+1):
@@ -97,7 +97,7 @@ class AnalyseTestLapData:
 
 
             # for self.lap_n in range(2):
-            for self.lap_n in range(10):
+            for self.lap_n in range(100):
                 if not self.load_lap_data(): break # no more laps
                 self.calculate_lap_statistics()
                 # self.generate_steering_graphs()
@@ -111,7 +111,7 @@ class AnalyseTestLapData:
 
     def load_lap_data(self):
         try:
-            data = np.load(self.path + "TestData_test/" + f"Lap_{self.lap_n}_history_{self.vehicle_name}.npy")
+            data = np.load(self.path + "TestData/" + f"Lap_{self.lap_n}_history_{self.vehicle_name}.npy")
             # data = np.load(self.path + f"Lap_{self.lap_n}_history_{self.vehicle_name}_{self.map_name}.npy")
         except Exception as e:
             print(e)
@@ -350,8 +350,9 @@ class AnalyseTestLapData:
         
         xs, ys = self.map_data.pts2rc(points)
         plt.plot(xs, ys, 'b-')
+        plt.title(f"{self.vehicle_name}")
 
-        plt.show()
+        # plt.show()
 
         plt.savefig(self.path + f"Trajectories/{self.vehicle_name}_curve_map_{self.lap_n}.svg", bbox_inches='tight')
         # plt.savefig(self.path + f"Trajectories/Curvature_{self.lap_n}_{self.vehicle_name}.pdf", bbox_inches='tight', pad_inches=0)
