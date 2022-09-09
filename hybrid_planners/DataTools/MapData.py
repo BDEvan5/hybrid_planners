@@ -43,7 +43,7 @@ class MapData:
         self.map_width = self.map_img.shape[1]
         
     def load_centerline(self):
-        xs, ys = [], []
+        xs, ys = [0], [0]
         # with open(self.path + self.map_name + "_std.csv", 'r') as file:
         with open(self.path + self.map_name + "_centerline.csv", 'r') as file:
             csvFile = csv.reader(file)
@@ -126,8 +126,9 @@ class MapData:
         plt.show()
 
     def plot_map_img_obs(self, rng):
-        obstacle_size=[0.7, 0.7]
-        n_obstacles = 6
+        obstacle_size=[0.9, 0.9] 
+        # obstacle_size=[0.3, 0.3]
+        n_obstacles = 8
         track_pts = np.array([self.xs, self.ys]).T
         radius = 1
 
@@ -135,9 +136,11 @@ class MapData:
         obs_size_px = np.array(obs_size_m / self.map_resolution, dtype=int)
 
         min_idx = int(len(track_pts) //10)
+        print(min_idx, len(track_pts))
         rand_idxs = rng.integers(min_idx, len(track_pts)-min_idx, size=n_obstacles)
 
-        rand_radii = rng.random(size=(n_obstacles, 2)) * radius
+        rand_radii = (rng.random(size=(n_obstacles, 2)) -0.5)
+        rand_radii *= radius 
 
         obs_locations = track_pts[rand_idxs, :] + rand_radii
 
@@ -149,6 +152,7 @@ class MapData:
         new_img = generate_obs_map_img(new_img, obs_locations, self.map_origin[0], self.map_origin[1], obs_size_px, self.map_resolution)
 
         plt.imshow(new_img, origin='lower', cmap='gray')
+        plt.title(f"{obs_locations}")
 
 def generate_obs_map_img(map_img, obs_locations, orig_x, orig_y, obs_size_px, map_resolution):
     """Adds obstacles of the defined size to the map image.

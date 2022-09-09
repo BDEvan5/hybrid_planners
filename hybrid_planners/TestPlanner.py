@@ -10,7 +10,8 @@ from hybrid_planners.Utils.HistoryStructs import VehicleStateHistory
 
 # settings
 SHOW_TRAIN = False
-SHOW_TEST = True
+SHOW_TEST = False
+# SHOW_TEST = True
 VERBOSE = True
 
 
@@ -27,6 +28,7 @@ class TestSimulation():
         self.completed_laps = None
         self.prev_obs = None
         self.n_obstacles = None
+        self.prev_action = None
 
         self.race_track = None
         self.map_name = None
@@ -110,6 +112,7 @@ class TestSimulation():
     # this is an overide
     def run_step(self, action):
         sim_steps = self.conf.sim_steps
+        self.prev_action = action
         if self.vehicle_state_history: 
             self.vehicle_state_history.add_action(action)
 
@@ -169,7 +172,7 @@ class TestSimulation():
             observation['lap_done'] = True
 
         if self.reward:
-            observation['reward'] = self.reward(observation, self.prev_obs)
+            observation['reward'] = self.reward(observation, self.prev_obs, self.prev_action)
 
         if self.vehicle_state_history:
             self.vehicle_state_history.add_state(obs['full_states'][0])

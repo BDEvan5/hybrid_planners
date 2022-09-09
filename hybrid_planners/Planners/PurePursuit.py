@@ -297,7 +297,8 @@ class PurePursuit:
         self.trajectory = Trajectory(run.map_name)
         # if run.racing: self.trajectory.load_csv_track()
         # else: self.trajectory.load_csv_centerline()
-        self.trajectory.load_csv_track()
+        self.trajectory.load_csv_centerline()
+        # self.trajectory.load_csv_track()
 
         self.lookahead = conf.lookahead
         self.v_min_plan = conf.v_min_plan

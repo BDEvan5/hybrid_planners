@@ -11,7 +11,7 @@ class RaceTrack:
         self.total_s = None
 
         self.max_distance = 0
-        self.distance_allowance = 1
+        self.distance_allowance = 0.4
 
     def plot_wpts(self):
         plt.figure(1)
@@ -154,19 +154,41 @@ class RaceTrack:
         position = observation['state'][0:2]
         s = self.find_s(position)
 
-        if s <= (self.max_distance - self.distance_allowance) and self.max_distance < 0.8*self.total_s and s > 0.1:
+        if s <= (self.max_distance - self.distance_allowance) and self.max_distance < 0.8*self.total_s and s > 0.01:
             # check if I went backwards, unless the max distance is almost finished and that it isn't starting
             return True # made negative progress
         self.max_distance = max(self.max_distance, s)
 
         return False
 
+from hybrid_planners.Planners.PurePursuit import PurePursuit
+
+class DeviationPP:
+    def __init__(self, conf, run):
+        self.pp = PurePursuit(conf, run)
+        
+
+    def __call__(self, observation, prev_obs, action):
+            if prev_obs is None: return 0
+
+            if observation['lap_done']:
+                return 1  # complete
+            if observation['colision_done']:
+                return -1 # crash
+            
+            pp_steering = self.pp.plan(prev_obs)[0]
+
+            reward = 0.2 - abs(pp_steering - action[0]) * 0.5
+            reward = max(reward, 0) # limit at 0
+
+            return reward
+
 
 class DistanceReward():
     def __init__(self, race_track: RaceTrack) -> None:
         self.race_track = race_track
 
-    def __call__(self, observation, prev_obs):
+    def __call__(self, observation, prev_obs, n=None):
         if prev_obs is None: return 0
 
         if observation['lap_done']:

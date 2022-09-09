@@ -196,6 +196,7 @@ class F110Env(gym.Env):
         self.poses = []
         self.track_pts, self.track_widths = self.load_centerline()
         self.obs_rng = np.random.default_rng(self.seed)
+        self.counter = 0
 
     def __del__(self):
         """
@@ -429,7 +430,7 @@ class F110Env(gym.Env):
 
         return center_pts, widths
 
-    def add_obstacles(self, n_obstacles, obstacle_size=[0.3, 0.3]):
+    def add_obstacles(self, n_obstacles, obstacle_size=[0.9, 0.9]):
         """
         Adds a set number of obstacles to the envioronment using the track centerline. 
         Note: this function requires a csv file with the centerline points in it which can be loaded. 
@@ -449,6 +450,8 @@ class F110Env(gym.Env):
         obs_size_px = np.array(obs_size_m / ss.map_resolution, dtype=int)
 
         min_idx = int(len(self.track_pts) //10)
+        print(min_idx, len(self.track_pts))
+
         rand_idxs = self.obs_rng.integers(min_idx, len(self.track_pts)-min_idx, size=n_obstacles)
         rand_radii = self.obs_rng.random(size=(n_obstacles, 2)) -0.5
         rand_radii *= radius 
@@ -459,13 +462,23 @@ class F110Env(gym.Env):
         # print(f"Map res: {ss.map_resolution}")
         # print(f"Map x: {ss.orig_x}")
         new_img = generate_obs_map_img(self.empty_map_img.copy(), obs_locations, ss.orig_x, ss.orig_y, obs_size_px, ss.map_resolution)
+
+        plt.figure(1)
+        plt.clf()
+        plt.imshow(new_img, origin='lower')
+        plt.title(f"{obs_locations}")
+        plt.pause(0.001)
+        plt.savefig(f"Data/sim_imgs/obs_map_{self.counter}.png")
+        self.counter += 1
+
         self.sim.update_map_img(new_img)
 
-        # fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(10, 5))
+        # fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(10, 5), num=1)
         # ax1.imshow(self.empty_map_img, origin='lower')
         # ax2.imshow(new_img, origin='lower')
         # ax3.imshow(new_img - self.empty_map_img, origin='lower')
-        # plt.show()
+        # # plt.show()
+        # plt.pause(0.01)
 
         if self.renderer is not None:
             self.renderer.add_obstacles(obs_locations, obs_size_m)

@@ -78,7 +78,7 @@ class E2eArchitecture:
 
     def transform_action(self, nn_action):
         steering_angle = nn_action[0] * self.max_steer
-        if self.action_space == 2:
+        if self.racing:
             speed = calculate_speed(steering_angle)
         else:
             speed = self.vehicle_speed
@@ -121,9 +121,10 @@ class SerialArchitecture:
         scaled_scan = scan/self.range_finder_scale
 
         scan = np.clip(scaled_scan, 0, 1)
-        pp_steering = self.pp_planner.plan(obs)
+        pp_steering = self.pp_planner.plan(obs)[0]
+        pp_steering = pp_steering / 0.4 # scale to [-1, 1] - note this is different to the rest.
 
-        current_obs = np.concatenate((scan, np.array([pp_steering[0]])))
+        current_obs = np.concatenate((scan, np.array([pp_steering])))
 
         if self.scan_buffer.all() ==0: # first reading
             for i in range(self.n_scans):

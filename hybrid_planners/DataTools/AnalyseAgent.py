@@ -61,7 +61,7 @@ class AnalyseTestLapData:
         print(f"{len(vehicle_folders)} folders found")
 
         for j, self.path in enumerate(vehicle_folders):
-            if j >5: break
+            # if j >5: break
             print(f"Vehicle folder being opened: {self.path}")
             # init_file_struct(self.summary_path + "SteeringDists/")
             init_file_struct(self.path + "Trajectories/")
@@ -84,22 +84,22 @@ class AnalyseTestLapData:
             self.race_track.load_centerline()
 
             _, _, p, _ = load_csv_data(self.path)
-            print(f"{len(p)}")
+            # print(f"{len(p)}")
 
             n = self.vehicle_name.split("_")[-2]
-            i = self.vehicle_name.split("_")[-1].split(".")[0]
-            seed =  100 + int(i) * 10
+            # i = self.vehicle_name.split("_")[-1].split(".")[0]
+            seed =  10000 #+ int(i) * 10
             # seed = 100
             self.obs_rng = np.random.default_rng(seed)
-            for _ in range(len(p)+1):
-                _b = self.obs_rng.integers(13, 120, size=6)
-                _a = self.obs_rng.random(size=(6, 2)) 
+            # for _ in range(len(p)+1):
+            #     _b = self.obs_rng.integers(13, 120, size=6)
+            #     _a = self.obs_rng.random(size=(6, 2)) 
 
 
             # for self.lap_n in range(2):
             for self.lap_n in range(10):
                 if not self.load_lap_data(): break # no more laps
-                # self.calculate_lap_statistics()
+                self.calculate_lap_statistics()
                 # self.generate_steering_graphs()
                 # self.plot_curvature_heat_map()
 
@@ -111,7 +111,7 @@ class AnalyseTestLapData:
 
     def load_lap_data(self):
         try:
-            data = np.load(self.path + "TestData/" + f"Lap_{self.lap_n}_history_{self.vehicle_name}.npy")
+            data = np.load(self.path + "TestData_test/" + f"Lap_{self.lap_n}_history_{self.vehicle_name}.npy")
             # data = np.load(self.path + f"Lap_{self.lap_n}_history_{self.vehicle_name}_{self.map_name}.npy")
         except Exception as e:
             print(e)
@@ -353,13 +353,13 @@ class AnalyseTestLapData:
 
         plt.show()
 
-        # plt.savefig(self.path + f"Trajectories/{self.vehicle_name}_curve_map_{self.lap_n}.svg", bbox_inches='tight')
-        # plt.savefig(self.path + f"Curvatures/Curvature_{self.lap_n}_{self.vehicle_name}.pdf", bbox_inches='tight', pad_inches=0)
+        plt.savefig(self.path + f"Trajectories/{self.vehicle_name}_curve_map_{self.lap_n}.svg", bbox_inches='tight')
+        # plt.savefig(self.path + f"Trajectories/Curvature_{self.lap_n}_{self.vehicle_name}.pdf", bbox_inches='tight', pad_inches=0)
 
 
 
 def analyse_folder():
-    path = "Data/Vehicles/BigSlowTests/"
+    path = "Data/Vehicles/devel2fast/"
     # path = "Data/Vehicles/FastTests/"
     # path = "Data/Vehicles/SlowTests/"
 

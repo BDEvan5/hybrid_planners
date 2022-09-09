@@ -10,8 +10,8 @@ from hybrid_planners.Utils.Reward import *
 
 
 # settings
-SHOW_TRAIN = True
-# SHOW_TRAIN = False
+# SHOW_TRAIN = True
+SHOW_TRAIN = False
 SHOW_TEST = False
 VERBOSE = True
 
@@ -36,7 +36,8 @@ class TrainSimulation(TestSimulation):
             self.race_track = RaceTrack(run.map_name)
             self.race_track.load_centerline()
             # self.reward = CrossTrackHeadReward(self.race_track, self.conf)
-            self.reward = DistanceReward(self.race_track)
+            # self.reward = DistanceReward(self.race_track)
+            self.reward = DeviationPP(self.conf, run)
             # self.reward = StdReward()
             self.n_obstacles = run.n_obstacles
             self.n_train_steps = run.n_train_steps

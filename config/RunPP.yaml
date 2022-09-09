@@ -21,8 +21,8 @@ n_test_laps: 100
 racing: True
 # racing: False
 
-# map_name: "columbia_small"
-map_name: "f1_aut"
+map_name: "columbia_small"
+# map_name: "f1_aut"
 
 runs:
   - n_obstacles: 0

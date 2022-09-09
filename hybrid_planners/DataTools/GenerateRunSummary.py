@@ -4,11 +4,12 @@ import glob
 
 
 def generate_summary_table():
-    folder = "Data/Vehicles/SlowTests/"
+    # folder = "Data/Vehicles/SlowTests/"
+    folder = "Data/Vehicles/devel2fast/"
     # folder = "Data/Vehicles/FastTests/"
 
-    # map_name = "columbia_small"
-    map_name = "f1_aut"
+    map_name = "columbia_small"
+    # map_name = "f1_aut"
     folders = glob.glob(folder + f"*_{map_name}*/")
     agents = [f.split("/")[-2] for f in folders]
     agents.sort()
@@ -227,12 +228,12 @@ def make_mean_table():
         summary_file.write("\\hline \n")
 
 
-# generate_summary_table()
+generate_summary_table()
 
 # generate_condensed_table()
 # generate_summaries()
 # convert_summaries_to_big_table()
-make_plots()
+# make_plots()
 # make_mean_table()
 
 
