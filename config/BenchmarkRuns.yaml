@@ -1,7 +1,8 @@
 # test_name: "Benchmark" # the series of tests being run in thesis
 test_name: "ThesisTests" # the series of tests being run in thesis
 
-n: 10
+n: 1
+# start_n:1 
 set_n: 1
 random_seed: 10000
 
@@ -17,8 +18,8 @@ map_name: "columbia_small"
 # map_name: "f1_aut"
 
 runs:
-  - architecture: "E2e"
-  - architecture: "Serial"
+  # - architecture: "E2e"
+  # - architecture: "Serial"
   - architecture: "Mod"
 
 

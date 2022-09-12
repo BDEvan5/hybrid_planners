@@ -16,8 +16,9 @@ VERBOSE = True
 
 
 class TestSimulation():
-    def __init__(self, run_file: str):
-        self.run_data = setup_run_list(run_file)
+    def __init__(self, run_file: str =None):
+        if run_file is not None:
+            self.run_data = setup_run_list(run_file)
         self.conf = load_conf("config_file")
 
         self.env = None
@@ -38,35 +39,38 @@ class TestSimulation():
 
     def run_testing_evaluation(self):
         for run in self.run_data:
-            seed = run.random_seed + 10*run.n
-            # seed = 100
-            np.random.seed(seed) # repetition seed
-            torch.use_deterministic_algorithms(True)
-            torch.manual_seed(seed)
+            self.evaluate_run(run)
 
-            self.env = F110Env(map=run.map_name, seed=seed)
-            self.map_name = run.map_name
+    def evaluate_run(self, run):
+        seed = run.random_seed + 10*run.n
+        # seed = 100
+        np.random.seed(seed) # repetition seed
+        torch.use_deterministic_algorithms(True)
+        torch.manual_seed(seed)
 
-            if run.architecture == "PP": self.planner = PurePursuit(self.conf, run)
-            elif run.architecture == "FTG": self.planner = FollowTheGap(self.conf, run)
-            else: self.planner = AgentTester(run, self.conf)
-            # save_path = run.path + run.run_name + f"/TestData_{run.n_obstacles}/"
-            save_path = run.path + run.run_name + f"/TestData_test/"
-            init_file_struct("Data/Vehicles/" +save_path)
-            self.vehicle_state_history = VehicleStateHistory(save_path, run.run_name)
+        self.env = F110Env(map=run.map_name, seed=seed)
+        self.map_name = run.map_name
 
-            self.n_test_laps = run.n_test_laps
-            self.n_obstacles = run.n_obstacles
-            self.lap_times = []
-            self.completed_laps = 0
+        if run.architecture == "PP": self.planner = PurePursuit(self.conf, run)
+        elif run.architecture == "FTG": self.planner = FollowTheGap(self.conf, run)
+        else: self.planner = AgentTester(run, self.conf)
+        # save_path = run.path + run.run_name + f"/TestData_{run.n_obstacles}/"
+        save_path = run.path + run.run_name + f"/TestData_test/"
+        init_file_struct("Data/Vehicles/" +save_path)
+        self.vehicle_state_history = VehicleStateHistory(save_path, run.run_name)
 
-            eval_dict = self.run_testing()
-            run_dict = vars(run)
-            run_dict.update(eval_dict)
+        self.n_test_laps = run.n_test_laps
+        self.n_obstacles = run.n_obstacles
+        self.lap_times = []
+        self.completed_laps = 0
 
-            save_conf_dict(run_dict)
+        eval_dict = self.run_testing()
+        run_dict = vars(run)
+        run_dict.update(eval_dict)
 
-            self.env.close_rendering()
+        save_conf_dict(run_dict)
+
+        self.env.close_rendering()
 
     def run_testing(self):
         assert self.env != None, "No environment created"
@@ -203,8 +207,20 @@ def main():
     sim.run_testing_evaluation()
 
 
+def test_individual_run():
+    with open("Data/Vehicles/FastTests2/Mod_columbia_small_2_1/Mod_columbia_small_2_1_record.yaml") as file:
+        run_dict = yaml.load(file, Loader=yaml.FullLoader)
+
+    run = Namespace(**run_dict)
+    run.n_test_laps = 10
+
+    sim = TestSimulation()
+    sim.evaluate_run(run)
+
+
 if __name__ == '__main__':
-    main()
+    # main()
+    test_individual_run()
 
 
 
