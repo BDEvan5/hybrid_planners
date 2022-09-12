@@ -100,6 +100,7 @@ def plot_reward_steps(path):
 
 # Slow tests
 def slow_progress_training_comparision():
+    # p = "Data/Vehicles/FinalTests/"
     p = "Data/Vehicles/FastTests2/"
 
     e2e_steps = []

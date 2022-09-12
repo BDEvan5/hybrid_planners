@@ -98,7 +98,7 @@ class AnalyseTestLapData:
         self.obs_rng = np.random.default_rng(seed)
 
         # for self.lap_n in range(2):
-        for self.lap_n in range(10):
+        for self.lap_n in range(100):
             if not self.load_lap_data(): break # no more laps
             self.calculate_lap_statistics()
             # self.generate_steering_graphs()
@@ -107,7 +107,7 @@ class AnalyseTestLapData:
             # self.plot_velocity_heat_map()
             # self.plot_friction_graphs()
             # self.plot_obs_graphs()
-            self.plot_obs_graphs([300, 680], [200, 490], [350, 250])
+            # self.plot_obs_graphs([300, 680], [200, 490], [350, 250])
             # self.plot_obs_graphs()
             # self.make_mod_graph()
 
@@ -460,7 +460,8 @@ class AnalyseTestLapData:
 
 def analyse_folder():
     # path = "Data/Vehicles/devel2fast/"
-    path = "Data/Vehicles/FastTests/"
+    path = "Data/Vehicles/ModTests/"
+    # path = "Data/Vehicles/FastTests/"
     # path = "Data/Vehicles/SlowTests/"
 
     TestData = AnalyseTestLapData()

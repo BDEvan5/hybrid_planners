@@ -3,10 +3,7 @@ import matplotlib.pyplot as plt
 import glob
 
 
-def generate_summary_table():
-    # folder = "Data/Vehicles/SlowTests/"
-    # folder = "Data/Vehicles/devel2fast/"
-    folder = "Data/Vehicles/FastTests2/"
+def generate_summary_table(folder):
 
     map_name = "columbia_small"
     # map_name = "f1_aut"
@@ -235,13 +232,15 @@ def make_mean_table():
 
         summary_file.write("\\hline \n")
 
+path = "Data/Vehicles/ModTests1/"
+# path = "Data/Vehicles/ModTests1/"
 
-# generate_summary_table()
+generate_summary_table(path)
 
 # generate_condensed_table()
 # generate_summaries()
 # convert_summaries_to_big_table()
 # make_plots()
-make_mean_table()
+# make_mean_table()
 
 
