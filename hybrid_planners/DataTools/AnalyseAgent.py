@@ -60,54 +60,58 @@ class AnalyseTestLapData:
         vehicle_folders = glob.glob(f"{path}*/")
         print(f"{len(vehicle_folders)} folders found")
 
-        for j, self.path in enumerate(vehicle_folders):
+        for j, path in enumerate(vehicle_folders):
             # if j >5: break
-            print(f"Vehicle folder being opened: {self.path}")
-            # init_file_struct(self.summary_path + "SteeringDists/")
-            # v_path = self.path + "Trajectories/"
-            # if os.path.exists(v_path):
-            #     continue
-            init_file_struct(self.path + "Trajectories/")
-            # init_file_struct(self.path + "Curvatures/")
-            # init_file_struct(self.path + "Hists/")
-            # init_file_struct(self.path + "Velocities/")
-            # init_file_struct(self.path + "FrictionPlots/")
+            print(f"Vehicle folder being opened: {path}")
+            self.process_vehicle(path)
 
-            with open(self.path + "Statistics.txt", "w") as file:
-                file.write(f"Name: {self.path}\n")
-                file.write("Lap" + "Steering".rjust(16) + "Total Distance".rjust(16) + "Mean Curvature".rjust(16) + "Total Curvature".rjust(16) + "Mean Deviation".rjust(16) + "Total Deviation".rjust(16) + "Progress".rjust(16) + "Time".rjust(16) + "Avg Velocity".rjust(16) + "\n")
+    def process_vehicle(self, vehicle_path):
+        self.path = vehicle_path
 
-            self.vehicle_name = self.path.split("/")[-2]
-            self.map_name = self.vehicle_name.split("_")[1]
-            if self.map_name == "f1":
-                self.map_name += "_" + self.vehicle_name.split("_")[2]
-            elif self.map_name == "columbia": self.map_name += "_" + self.vehicle_name.split("_")[2]
-            self.map_data = MapData(self.map_name)
-            self.race_track = RaceTrack(self.map_name)
-            self.race_track.load_centerline()
+        # init_file_struct(self.summary_path + "SteeringDists/")
+        # v_path = self.path + "Trajectories/"
+        # if os.path.exists(v_path):
+        #     continue
+        # init_file_struct(self.path + "Trajectories/")
+        # init_file_struct(self.path + "Curvatures/")
+        # init_file_struct(self.path + "Hists/")
+        # init_file_struct(self.path + "Velocities/")
+        # init_file_struct(self.path + "FrictionPlots/")
 
-            # n = self.vehicle_name.split("_")[-2]
-            i = self.vehicle_name.split("_")[-1].split(".")[0]
-            seed =  10000 + int(i) * 10
-            # seed = 100
-            self.obs_rng = np.random.default_rng(seed)
-            # for _ in range(len(p)+1):
-            #     _b = self.obs_rng.integers(13, 120, size=6)
-            #     _a = self.obs_rng.random(size=(6, 2)) 
+        with open(self.path + "Statistics.txt", "w") as file:
+            file.write(f"Name: {self.path}\n")
+            file.write("Lap" + "Steering".rjust(16) + "Total Distance".rjust(16) + "Mean Curvature".rjust(16) + "Total Curvature".rjust(16) + "Mean Deviation".rjust(16) + "Total Deviation".rjust(16) + "Progress".rjust(16) + "Time".rjust(16) + "Avg Velocity".rjust(16) + "\n")
 
+        self.vehicle_name = self.path.split("/")[-2]
+        self.map_name = self.vehicle_name.split("_")[1]
+        if self.map_name == "f1":
+            self.map_name += "_" + self.vehicle_name.split("_")[2]
+        elif self.map_name == "columbia": self.map_name += "_" + self.vehicle_name.split("_")[2]
+        self.map_data = MapData(self.map_name)
+        self.race_track = RaceTrack(self.map_name)
+        self.race_track.load_centerline()
 
-            # for self.lap_n in range(2):
-            for self.lap_n in range(100):
-                if not self.load_lap_data(): break # no more laps
-                self.calculate_lap_statistics()
-                # self.generate_steering_graphs()
-                # self.plot_curvature_heat_map()
+        # n = self.vehicle_name.split("_")[-2]
+        i = self.vehicle_name.split("_")[-1].split(".")[0]
+        seed =  10000 + int(i) * 10
+        # seed = 100
+        self.obs_rng = np.random.default_rng(seed)
 
-                # self.plot_velocity_heat_map()
-                # self.plot_friction_graphs()
-                self.plot_obs_graphs()
+        # for self.lap_n in range(2):
+        for self.lap_n in range(10):
+            if not self.load_lap_data(): break # no more laps
+            self.calculate_lap_statistics()
+            # self.generate_steering_graphs()
+            # self.plot_curvature_heat_map()
 
-            self.generate_summary_stats()
+            # self.plot_velocity_heat_map()
+            # self.plot_friction_graphs()
+            # self.plot_obs_graphs()
+            self.plot_obs_graphs([300, 680], [200, 490], [350, 250])
+            # self.plot_obs_graphs()
+            # self.make_mod_graph()
+
+        self.generate_summary_stats()
 
     def load_lap_data(self):
         try:
@@ -341,17 +345,22 @@ class AnalyseTestLapData:
 
         plt.pause(0.0001)
 
-
-    def plot_obs_graphs(self):
+    def plot_obs_graphs(self, xlims, ylims, text):
         plt.figure(1)
         plt.clf()
         self.map_data.plot_map_img_obs(self.obs_rng)
+        xs, ys = self.map_data.xy2rc(self.map_data.xs, self.map_data.ys)
+        plt.plot(xs, ys, '--', color='orange', alpha=0.8)
         points = self.states[:, 0:2]
+
         
         xs, ys = self.map_data.pts2rc(points)
         plt.plot(xs, ys, 'b-')
         # plt.title(f"{self.vehicle_name.split('_')[0]}")
-        plt.text(60, 430, self.vehicle_name.split('_')[0], fontsize=20)
+        plt.text(text[0], text[1], self.vehicle_name.split('_')[0], fontsize=25)
+
+        plt.xlim(xlims)
+        plt.ylim(ylims)
 
         plt.tight_layout()
         plt.xticks([])
@@ -368,15 +377,97 @@ class AnalyseTestLapData:
         plt.savefig(self.path + f"Trajectories/{self.vehicle_name}_curve_map_{self.lap_n}.svg", bbox_inches='tight', pad_inches=0)
         plt.savefig(self.path + f"Trajectories/Curvature_{self.lap_n}_{self.vehicle_name}.pdf", bbox_inches='tight', pad_inches=0)
 
+    def make_nn_plot(self):
+        lap_path  = self.path + "ModHistory_Lap_" + str(self.lap_n) + ".npy"
+
+        arr = np.load(lap_path)
+        pp, nn, steering = arr[:, 0], arr[:, 1], arr[:, 2]
+        steering = np.clip(steering, -0.45, 0.45)
+
+        fig, axs = plt.subplots(3, 1, figsize=(10, 6), sharex=True)
+        axs[0].plot(pp)
+        axs[0].set_title("Pure Pursuit")
+        axs[0].set_ylim(-0.5, 0.5)
+        axs[0].grid()
+
+        axs[1].plot(nn * 0.4)
+        axs[1].set_ylim(-0.5, 0.5)
+        axs[1].set_title("Neural Network")
+        axs[1].grid()
+
+        axs[2].plot(steering)
+        axs[2].set_title("Steering Angle")
+        axs[2].set_ylim(-0.5, 0.5)
+        axs[2].grid()
+
+        plt.tight_layout()
+
+        plt.savefig(self.path + "ArchHistory/ModHistory_LapPlot_" + str(self.lap_n) + ".svg", bbox_inches='tight', pad_inches=0)
+
+        plt.show()
+
+
+    def make_mod_graph(self):
+        plt.figure(1)
+        plt.clf()
+        self.map_data.plot_map_img_obs(self.obs_rng)
+        xs, ys = self.map_data.xy2rc(self.map_data.xs, self.map_data.ys)
+        plt.plot(xs, ys, '--', color='orange', alpha=0.8)
+        points = self.states[:, 0:2]
+
+
+        lap_path  = self.path + "ArchHistory/ModHistory_Lap_" + str(self.lap_n) + ".npy"
+        arr = np.load(lap_path)
+        pp, nn, steering = arr[:, 0], arr[:, 1], arr[:, 2]
+        steering = np.clip(steering, -0.45, 0.45)
+
+        z2 = np.zeros(2)
+ 
+        steering = np.insert(steering, 0, 0)
+        steering = np.insert(steering, 0, 0)
+        nn = np.insert(nn, 0, 0)
+        nn = np.insert(nn, 0, 0)
+
+        big_pts = points[0::50, :]
+        
+        xs, ys = self.map_data.pts2rc(points)
+        b_xs, b_ys = self.map_data.pts2rc(big_pts)
+        threshold = 0.15
+        for i in range(len(points)-1):
+            if abs(nn[i]) > threshold:
+                plt.plot(xs[i:i+2], ys[i:i+2], 'g', linewidth=2)
+            else:
+                plt.plot(xs[i:i+2], ys[i:i+2], 'b', linewidth=2)
+        # plt.title(f"{self.vehicle_name.split('_')[0]}")
+        plt.text(60, 430, self.vehicle_name.split('_')[0], fontsize=20)
+
+        plt.tight_layout()
+        plt.xticks([])
+        plt.yticks([])
+        ax = plt.gca()
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['bottom'].set_visible(False)
+        ax.spines['left'].set_visible(False)
+        
+
+
+        plt.savefig(self.path + f"Trajectories/{self.vehicle_name}_curve_map_{self.lap_n}.svg", bbox_inches='tight', pad_inches=0)
+        plt.savefig(self.path + f"Trajectories/Curvature_{self.lap_n}_{self.vehicle_name}.pdf", bbox_inches='tight', pad_inches=0)
+
+        # plt.show()
 
 
 def analyse_folder():
     # path = "Data/Vehicles/devel2fast/"
-    path = "Data/Vehicles/FastTests2/"
+    path = "Data/Vehicles/FastTests/"
     # path = "Data/Vehicles/SlowTests/"
 
     TestData = AnalyseTestLapData()
     TestData.explore_folder(path)
+
+    # vehicle = "Mod_columbia_small_2_1/"
+    # TestData.process_vehicle(path + vehicle)
 
 if __name__ == '__main__':
     analyse_folder()

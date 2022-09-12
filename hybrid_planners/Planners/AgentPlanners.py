@@ -100,6 +100,10 @@ class AgentTester:
 
         self.actor = torch.load(self.path + '/' + run.run_name + "_actor.pth")
 
+
+        self.arch_path = self.path + "/ArchHistory/"
+        init_file_struct(self.arch_path)
+
         if run.architecture == "E2e": self.architecture = E2eArchitecture(run, conf)
         elif run.architecture == "Serial": self.architecture = SerialArchitecture(run, conf)
         elif run.architecture == "Mod": self.architecture = ModArchitecture(run, conf)

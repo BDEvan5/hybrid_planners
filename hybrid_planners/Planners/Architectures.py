@@ -150,6 +150,32 @@ class SerialArchitecture:
 
         return action
 
+class ModHistory:
+    def __init__(self):
+        self.pp_history = []
+        self.nn_history = []
+        self.act_history = []
+
+        self.lap_n = 0
+
+    def add(self, pp, nn, act):
+        self.pp_history.append(pp)
+        self.nn_history.append(nn)
+        self.act_history.append(act)
+
+    def save(self, path):
+        pp = np.array(self.pp_history)
+        nn = np.array(self.nn_history)
+        act = np.array(self.act_history)
+
+        save_arr = np.concatenate((pp[:, None], nn[:, None], act[:, None]), axis=1)
+        np.save(path + f"ModHistory_Lap_{self.lap_n}", save_arr)
+
+        self.lap_n += 1
+        self.pp_history = []
+        self.nn_history = []
+        self.act_history = []
+
 
 class ModArchitecture:
     def __init__(self, run, conf):
@@ -169,6 +195,8 @@ class ModArchitecture:
         self.n_scans = conf.n_scans
         self.scan_buffer = np.zeros((self.n_scans, self.state_space))
         self.state_space *= self.n_scans
+
+        self.history = ModHistory()
 
     def transform_obs(self, obs):
         """
@@ -201,7 +229,7 @@ class ModArchitecture:
         return nn_obs
 
     def transform_action(self, nn_action):
-        steering_angle = nn_action[0] * self.max_steer + self.pp_steering
+        steering_angle = nn_action[0] * self.max_steer + self.pp_steering # no clipping.
         if np.isnan(steering_angle):
             print(f"Steering Nannnnn")
         if self.racing:
@@ -210,6 +238,7 @@ class ModArchitecture:
             speed = self.vehicle_speed
 
         action = np.array([steering_angle, speed])
+        self.history.add(self.pp_steering, nn_action[0], steering_angle)
 
         return action
 

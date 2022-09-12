@@ -144,13 +144,19 @@ class MapData:
         obs_locations = track_pts[rand_idxs, :] + rand_radii
 
         new_img = self.map_img.copy()
-        new_img[new_img == 1] = 180
-        new_img[new_img == 0 ] = 240
-        new_img[0, 1] = 255
-        new_img[0, 0] = 0
+        new_img[new_img == 1] = 1 # dark grey
+        # new_img[new_img == 1] = 180
+        # new_img[new_img == 0 ] = 240
+        new_img[new_img == 0 ] = 2 # light grey
+        # new_img[0, 1] = 255
+        # new_img[0, 0] = 0
         new_img = generate_obs_map_img(new_img, obs_locations, self.map_origin[0], self.map_origin[1], obs_size_px, self.map_resolution)
+        from matplotlib.colors import ListedColormap
+        cmap = ListedColormap(["red", "#858585", "#CACACA"])
 
-        plt.imshow(new_img, origin='lower', cmap='gray')
+        plt.imshow(new_img, origin='lower', cmap=cmap)
+        # plt.colorbar()
+        # plt.imshow(new_img, origin='lower', cmap='gray')
 
 def generate_obs_map_img(map_img, obs_locations, orig_x, orig_y, obs_size_px, map_resolution):
     """Adds obstacles of the defined size to the map image.

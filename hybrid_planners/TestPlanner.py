@@ -84,6 +84,8 @@ class TestSimulation():
                 observation = self.run_step(action)
                 if  SHOW_TEST: self.env.render('human_fast')
 
+            # self.planner.architecture.history.save(self.planner.arch_path)
+
             if observation['lap_done']:
                 if VERBOSE: print(f"Lap {i} Complete in time: {observation['current_laptime']}")
                 self.lap_times.append(observation['current_laptime'])
