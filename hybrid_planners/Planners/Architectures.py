@@ -196,7 +196,7 @@ class ModArchitecture:
         self.scan_buffer = np.zeros((self.n_scans, self.state_space))
         self.state_space *= self.n_scans
 
-        self.history = ModHistory()
+        # self.history = ModHistory()
 
     def transform_obs(self, obs):
         """
@@ -238,7 +238,7 @@ class ModArchitecture:
             speed = self.vehicle_speed
 
         action = np.array([steering_angle, speed])
-        self.history.add(self.pp_steering, nn_action[0], steering_angle)
+        # self.history.add(self.pp_steering, nn_action[0], steering_angle)
 
         return action
 

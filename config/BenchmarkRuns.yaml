@@ -1,13 +1,14 @@
 # test_name: "Benchmark" # the series of tests being run in thesis
-test_name: "ModTests1" # the series of tests being run in thesis
+# test_name: "ModTests1" # the series of tests being run in thesis
 # test_name: "FinalTests" # the series of tests being run in thesis
+test_name: devel
 
-n: 10
+n: 1
 # start_n:1 
-set_n: 1
-random_seed: 1000
+set_n: 4
+random_seed: 10000
 
-n_train_steps: 100000
+n_train_steps: 50000
 # n_test_laps: 2
 n_test_laps: 100
 
