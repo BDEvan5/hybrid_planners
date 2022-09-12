@@ -64,9 +64,9 @@ class AnalyseTestLapData:
             # if j >5: break
             print(f"Vehicle folder being opened: {self.path}")
             # init_file_struct(self.summary_path + "SteeringDists/")
-            v_path = self.path + "Trajectories/"
-            if os.path.exists(v_path):
-                continue
+            # v_path = self.path + "Trajectories/"
+            # if os.path.exists(v_path):
+            #     continue
             init_file_struct(self.path + "Trajectories/")
             # init_file_struct(self.path + "Curvatures/")
             # init_file_struct(self.path + "Hists/")
@@ -350,18 +350,29 @@ class AnalyseTestLapData:
         
         xs, ys = self.map_data.pts2rc(points)
         plt.plot(xs, ys, 'b-')
-        plt.title(f"{self.vehicle_name}")
+        # plt.title(f"{self.vehicle_name.split('_')[0]}")
+        plt.text(60, 430, self.vehicle_name.split('_')[0], fontsize=20)
+
+        plt.tight_layout()
+        plt.xticks([])
+        plt.yticks([])
+        ax = plt.gca()
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['bottom'].set_visible(False)
+        ax.spines['left'].set_visible(False)
+        
 
         # plt.show()
 
-        plt.savefig(self.path + f"Trajectories/{self.vehicle_name}_curve_map_{self.lap_n}.svg", bbox_inches='tight')
-        # plt.savefig(self.path + f"Trajectories/Curvature_{self.lap_n}_{self.vehicle_name}.pdf", bbox_inches='tight', pad_inches=0)
+        plt.savefig(self.path + f"Trajectories/{self.vehicle_name}_curve_map_{self.lap_n}.svg", bbox_inches='tight', pad_inches=0)
+        plt.savefig(self.path + f"Trajectories/Curvature_{self.lap_n}_{self.vehicle_name}.pdf", bbox_inches='tight', pad_inches=0)
 
 
 
 def analyse_folder():
     # path = "Data/Vehicles/devel2fast/"
-    path = "Data/Vehicles/FastTests/"
+    path = "Data/Vehicles/FastTests2/"
     # path = "Data/Vehicles/SlowTests/"
 
     TestData = AnalyseTestLapData()

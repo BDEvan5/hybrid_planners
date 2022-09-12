@@ -100,7 +100,7 @@ def plot_reward_steps(path):
 
 # Slow tests
 def slow_progress_training_comparision():
-    p = "Data/Vehicles/FastTests/"
+    p = "Data/Vehicles/FastTests2/"
 
     e2e_steps = []
     e2e_progresses = []
@@ -112,10 +112,11 @@ def slow_progress_training_comparision():
     map_name = "columbia_small"
     # map_name = "f1_aut"
 
+    set_n = 2
     for i in range(3):
-        path_e2e = p + f"E2e_{map_name}_1_{i}/"
-        path_serial = p + f"Serial_{map_name}_1_{i}/"
-        path_mod = p + f"Mod_{map_name}_1_{i}/"
+        path_e2e = p + f"E2e_{map_name}_{set_n}_{i}/"
+        path_serial = p + f"Serial_{map_name}_{set_n}_{i}/"
+        path_mod = p + f"Mod_{map_name}_{set_n}_{i}/"
 
         rewards_e2e, lengths_e2e, progresses_e2e, _ = load_csv_data(path_e2e)
         rewards_serial, lengths_serial, progresses_serial, _ = load_csv_data(path_serial)
@@ -158,7 +159,7 @@ def slow_progress_training_comparision():
     plt.tight_layout()
     plt.grid()
 
-    plt.savefig("Data/LowSpeedEval/" + f"slow_progress_{map_name}.pdf", bbox_inches='tight', pad_inches=0)
+    # plt.savefig("Data/LowSpeedEval/" + f"slow_progress_{map_name}.pdf", bbox_inches='tight', pad_inches=0)
 
     plt.show()
 

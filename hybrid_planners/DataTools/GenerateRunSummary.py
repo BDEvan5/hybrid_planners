@@ -6,7 +6,7 @@ import glob
 def generate_summary_table():
     # folder = "Data/Vehicles/SlowTests/"
     # folder = "Data/Vehicles/devel2fast/"
-    folder = "Data/Vehicles/FastTests/"
+    folder = "Data/Vehicles/FastTests2/"
 
     map_name = "columbia_small"
     # map_name = "f1_aut"
@@ -31,7 +31,7 @@ def generate_summary_table():
 def generate_condensed_table():
     # folder = "Data/Vehicles/SlowTests/"
     # folder = "Data/Vehicles/BigSlowTests/"
-    folder = "Data/Vehicles/FastTests/"
+    folder = "Data/Vehicles/FastTests2/"
 
     map_name = "columbia_small"
     # map_name = "f1_gbr"
@@ -66,13 +66,15 @@ def generate_condensed_table():
     
 
 def generate_summaries():
-    folder = "Data/Vehicles/FastTests/"
+    folder = "Data/Vehicles/FastTests2/"
 
     map_name = "columbia_small"
     # map_name = "f1_aut"
 
+    set_n = 2
+
     for run_n in range(3):
-        folders = glob.glob(folder + f"*_{map_name}_1_{run_n}/")
+        folders = glob.glob(folder + f"*_{map_name}_{set_n}_{run_n}/")
         agents = [f.split("/")[-2] for f in folders]
         agents.sort()
         print(agents)
@@ -146,7 +148,7 @@ def convert_summaries_to_plot():
             summary_file.write("".join([f"{float(mod_data[i][j]):.2f} , ".ljust(10) for j in range(10)]) + "\n")
 
 def make_plots():
-    folder = "Data/Vehicles/FastTests/"
+    folder = "Data/Vehicles/FastTests2/"
 
     # map_name = "f1_aut"
     map_name = "columbia_small"
@@ -191,7 +193,7 @@ def make_plots():
     plt.show()
 
 def make_mean_table():
-    folder = "Data/Vehicles/FastTests/"
+    folder = "Data/Vehicles/FastTests2/"
 
     map_name = "columbia_small"
     # map_name = "f1_aut"
@@ -240,6 +242,6 @@ def make_mean_table():
 # generate_summaries()
 # convert_summaries_to_big_table()
 # make_plots()
-# make_mean_table()
+make_mean_table()
 
 

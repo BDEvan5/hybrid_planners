@@ -1,18 +1,8 @@
 # test_name: "Benchmark" # the series of tests being run in thesis
-test_name: "FastTests2" # the series of tests being run in thesis
-# test_name: "SlowTests60" # the series of tests being run in thesis
-# test_name: "BigRacelineTests" # the series of tests being run in thesis
-# test_name: "devel2"
-# test_name: "devel2fast"
+test_name: "ThesisTests" # the series of tests being run in thesis
 
-# architecture: "E2e"
-# architecture: "Serial"
-# architecture: "Mod"
-# architecture: "PP"
-# architecture: "FTG"
-
-n: 3
-set_n: 2
+n: 10
+set_n: 1
 random_seed: 10000
 
 n_train_steps: 50000
@@ -25,15 +15,8 @@ racing: True
 
 map_name: "columbia_small"
 # map_name: "f1_aut"
-# map_name: "f1_gbr"
 
 runs:
-  # - map_name: "f1_aut"
-  # - map_name: "f1_mco"
-  # - map_name: "f1_esp"
-  # - map_name: "f1_gbr"
-  # - map_name: "columbia_small"
-
   - architecture: "E2e"
   - architecture: "Serial"
   - architecture: "Mod"

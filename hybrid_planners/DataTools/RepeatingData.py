@@ -219,10 +219,10 @@ class TestData:
 
 
 def make_thesis_dist():
-    map_name = "f1_aut"
-    # map_name = "columbia_small"
+    # map_name = "f1_aut"
+    map_name = "columbia_small"
     planners = ["E2e", "Mod", "Serial"]
-    folder = "Data/Vehicles/BigSlowTests/"
+    folder = "Data/Vehicles/FastTests/"
     # planner = "E2e"
     # planner = "Mod"
     # planner = "Serial"

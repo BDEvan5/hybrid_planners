@@ -145,7 +145,7 @@ class MapData:
 
         new_img = self.map_img.copy()
         new_img[new_img == 1] = 180
-        new_img[new_img == 0 ] = 230
+        new_img[new_img == 0 ] = 240
         new_img[0, 1] = 255
         new_img[0, 0] = 0
         new_img = generate_obs_map_img(new_img, obs_locations, self.map_origin[0], self.map_origin[1], obs_size_px, self.map_resolution)
