@@ -1,7 +1,7 @@
 # test_name: "Benchmark" # the series of tests being run in thesis
 # test_name: "ModTests1" # the series of tests being run in thesis
-test_name: "FinalTests2" # the series of tests being run in thesis
-test_name: "FFT2" # the series of tests being run in thesis
+# test_name: "FinalTests2" # the series of tests being run in thesis
+test_name: "Frt2" # the series of tests being run in thesis
 # test_name: devel
 
 n: 10

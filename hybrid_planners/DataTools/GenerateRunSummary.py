@@ -157,7 +157,7 @@ def make_plots(folder):
     mod_data = [[] for i in range(len(inds))]
     serial_data = [[] for i in range(len(inds))] 
 
-    for run_n in range(3):
+    for run_n in range(10):
         file_name = folder + f"SummaryTable_{map_name}_{run_n}.txt"
         
         with open(file_name, 'r') as summary_file:
@@ -166,28 +166,33 @@ def make_plots(folder):
             for i, line in enumerate(lines): # cycles through metrics
                 if i == 0 or i == 1:   continue
                 data = line.split(",")
-                # for j in range(len(inds)):
-                e2e_data[i-2].append(float(data[1]))
-                mod_data[i-2].append(float(data[2]))
-                serial_data[i-2].append(float(data[3]))
+                e2e = float(data[1])
+                mod = float(data[2])
+                serial = float(data[3])
+                if not np.isnan(e2e) and run_n!=8:
+                    e2e_data[i-2].append(e2e)
+                if not np.isnan(mod)  and run_n!=1:
+                    mod_data[i-2].append(mod)
+                if not np.isnan(serial)  and run_n!=6:
+                    serial_data[i-2].append(serial)
     # plot distances
-    for i in range(5):
-        plt.figure(i, figsize=(3, 2.4))
+    for i in range(len(inds)):
+        plt.figure(i, figsize=(3, 1.5))
         plt.xlabel(metrics[i])
         plt.boxplot(e2e_data[i], positions=[1], widths=0.6, vert=False, boxprops={'linewidth':2, 'color':'darkblue'}, whiskerprops={'linewidth':3, 'color':'darkblue'}, medianprops={'linewidth':3, 'color':'darkblue'}, capprops={'linewidth':3, 'color':'darkblue'})
         plt.boxplot(serial_data[i], positions=[2], widths=0.6, vert=False, boxprops={'linewidth':2, 'color':'darkblue'}, whiskerprops={'linewidth':3, 'color':'darkblue'}, medianprops={'linewidth':3, 'color':'darkblue'}, capprops={'linewidth':3, 'color':'darkblue'})
         plt.boxplot(mod_data[i], positions=[3], widths=0.6, vert=False, boxprops={'linewidth':2, 'color':'darkblue'}, whiskerprops={'linewidth':3, 'color':'darkblue'}, medianprops={'linewidth':3, 'color':'darkblue'}, capprops={'linewidth':3, 'color':'darkblue'})
         plt.yticks([1, 2, 3], agent_names)
 
-        plt.plot(np.mean(e2e_data[i]), 1, 'o', color='red', markersize=8)
-        plt.plot(np.mean(serial_data[i]), 2, 'o', color='red', markersize=8)
-        plt.plot(np.mean(mod_data[i]), 3, 'o', color='red', markersize=8)
+        plt.plot(np.mean(e2e_data[i]), 1, 'o', color='red', markersize=6)
+        plt.plot(np.mean(serial_data[i]), 2, 'o', color='red', markersize=6)
+        plt.plot(np.mean(mod_data[i]), 3, 'o', color='red', markersize=6)
 
         plt.tight_layout()
         plt.grid(True)
 
-        plt.savefig("Data/LowSpeedEval/" + f"RepeatTrain_{metric_names[i]}.pdf", bbox_inches='tight', pad_inches=0)
-        plt.savefig("Data/LowSpeedEval/" + f"RepeatTrain_{metric_names[i]}.svg", bbox_inches='tight', pad_inches=0)
+        plt.savefig("Data/ThesisEval/" + f"RepeatTrain_{metric_names[i]}.pdf", bbox_inches='tight', pad_inches=0)
+        plt.savefig("Data/EvalAnalysis/" + f"RepeatTrain_{metric_names[i]}.svg", bbox_inches='tight', pad_inches=0)
 
     plt.show()
 
@@ -216,11 +221,11 @@ def make_mean_table(folder):
                 e2e = float(data[1])
                 mod = float(data[2])
                 serial = float(data[3])
-                if not np.isnan(e2e):
+                if not np.isnan(e2e) and run_n!=8:
                     e2e_data[i-2].append(e2e)
-                if not np.isnan(mod):
+                if not np.isnan(mod)  and run_n!=1:
                     mod_data[i-2].append(mod)
-                if not np.isnan(serial):
+                if not np.isnan(serial)  and run_n!=6:
                     serial_data[i-2].append(serial)
                 # e2e_data[i-2].append(float(data[1]))
                 # mod_data[i-2].append(float(data[2]))

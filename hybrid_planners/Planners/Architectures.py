@@ -230,6 +230,7 @@ class ModArchitecture:
 
     def transform_action(self, nn_action):
         steering_angle = nn_action[0] * self.max_steer + self.pp_steering # no clipping.
+        steering_angle = np.clip(steering_angle, -self.max_steer, self.max_steer)
         if np.isnan(steering_angle):
             print(f"Steering Nannnnn")
         if self.racing:

@@ -222,7 +222,7 @@ def make_thesis_dist():
     # map_name = "f1_aut"
     map_name = "columbia_small"
     planners = ["E2e", "Mod", "Serial"]
-    folder = "Data/Vehicles/FastTests/"
+    folder = "Data/Vehicles/FFT2/"
     # planner = "E2e"
     # planner = "Mod"
     # planner = "Serial"
