@@ -59,6 +59,7 @@ class AnalyseTestLapData:
     def explore_folder(self, path):
         vehicle_folders = glob.glob(f"{path}*/")
         print(f"{len(vehicle_folders)} folders found")
+        vehicle_folders.sort()
 
         for j, path in enumerate(vehicle_folders):
             # if j >5: break
@@ -460,7 +461,7 @@ class AnalyseTestLapData:
 
 def analyse_folder():
     # path = "Data/Vehicles/devel2fast/"
-    path = "Data/Vehicles/ModTests/"
+    path = "Data/Vehicles/FFT2/"
     # path = "Data/Vehicles/FastTests/"
     # path = "Data/Vehicles/SlowTests/"
 

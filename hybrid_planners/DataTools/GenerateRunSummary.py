@@ -62,15 +62,13 @@ def generate_condensed_table():
         summary_file.write(f"\hline\n")
     
 
-def generate_summaries():
-    folder = "Data/Vehicles/FastTests2/"
-
+def generate_summaries(folder):
     map_name = "columbia_small"
     # map_name = "f1_aut"
 
-    set_n = 2
+    set_n = 1
 
-    for run_n in range(3):
+    for run_n in range(10):
         folders = glob.glob(folder + f"*_{map_name}_{set_n}_{run_n}/")
         agents = [f.split("/")[-2] for f in folders]
         agents.sort()
@@ -144,8 +142,8 @@ def convert_summaries_to_plot():
             summary_file.write(f"{metrics[i]} ,".ljust(20))
             summary_file.write("".join([f"{float(mod_data[i][j]):.2f} , ".ljust(10) for j in range(10)]) + "\n")
 
-def make_plots():
-    folder = "Data/Vehicles/FastTests2/"
+def make_plots(folder):
+    # folder = "Data/Vehicles/FastTests2/"
 
     # map_name = "f1_aut"
     map_name = "columbia_small"
@@ -181,6 +179,10 @@ def make_plots():
         plt.boxplot(mod_data[i], positions=[3], widths=0.6, vert=False, boxprops={'linewidth':2, 'color':'darkblue'}, whiskerprops={'linewidth':3, 'color':'darkblue'}, medianprops={'linewidth':3, 'color':'darkblue'}, capprops={'linewidth':3, 'color':'darkblue'})
         plt.yticks([1, 2, 3], agent_names)
 
+        plt.plot(np.mean(e2e_data[i]), 1, 'o', color='red', markersize=8)
+        plt.plot(np.mean(serial_data[i]), 2, 'o', color='red', markersize=8)
+        plt.plot(np.mean(mod_data[i]), 3, 'o', color='red', markersize=8)
+
         plt.tight_layout()
         plt.grid(True)
 
@@ -189,13 +191,12 @@ def make_plots():
 
     plt.show()
 
-def make_mean_table():
-    folder = "Data/Vehicles/FastTests2/"
+def make_mean_table(folder):
 
     map_name = "columbia_small"
     # map_name = "f1_aut"
 
-    metrics = ["Total Distance", "Total Curvature", "Total Deviation", "Avg. Progress", "Completion Rate"]
+    metrics = ["Total Distance m", "Total Curvature m$^{-1}$", "Total Deviation m", "Avg. Progress \%", "Completion Rate \%"]
     inds = [2, 3, 4, 5, 6]
     agent_names = ["E2e", "Serial", "Mod"]
 
@@ -203,7 +204,7 @@ def make_mean_table():
     mod_data = [[] for i in range(len(inds))]
     serial_data = [[] for i in range(len(inds))] 
 
-    for run_n in range(3):
+    for run_n in range(10):
         file_name = folder + f"SummaryTable_{map_name}_{run_n}.txt"
         
         with open(file_name, 'r') as summary_file:
@@ -212,10 +213,18 @@ def make_mean_table():
             for i, line in enumerate(lines): # cycles through metrics
                 if i == 0 or i == 1:   continue
                 data = line.split(",")
-                # for j in range(len(inds)):
-                e2e_data[i-2].append(float(data[1]))
-                mod_data[i-2].append(float(data[2]))
-                serial_data[i-2].append(float(data[3]))
+                e2e = float(data[1])
+                mod = float(data[2])
+                serial = float(data[3])
+                if not np.isnan(e2e):
+                    e2e_data[i-2].append(e2e)
+                if not np.isnan(mod):
+                    mod_data[i-2].append(mod)
+                if not np.isnan(serial):
+                    serial_data[i-2].append(serial)
+                # e2e_data[i-2].append(float(data[1]))
+                # mod_data[i-2].append(float(data[2]))
+                # serial_data[i-2].append(float(data[3]))
 
 
     big_table = folder + "thesis_mean_table.txt"
@@ -225,22 +234,24 @@ def make_mean_table():
         summary_file.write("\\hline \n")
         for i in range(len(metrics)):
 
-            summary_file.write(f"{metrics[i]},".ljust(20))
-            summary_file.write(f" & {np.mean(e2e_data[i]):.2f}".ljust(10))
-            summary_file.write(f" & {np.mean(serial_data[i]):.2f}".ljust(10))
-            summary_file.write(f" & {np.mean(mod_data[i]):.2f} \\\\ \n".ljust(10))
+            summary_file.write(f"{metrics[i]}".ljust(28))
+            summary_file.write(f" & {np.mean(e2e_data[i]):.2f} $\pm$ {np.std(e2e_data[i]):.2f}".ljust(25))
+            summary_file.write(f" & {np.mean(serial_data[i]):.2f} $\pm$ {np.std(serial_data[i]):.2f}".ljust(25))
+            summary_file.write(f" & {np.mean(mod_data[i]):.2f} $\pm$ {np.std(mod_data[i]):.2f} ".ljust(25) + "\\\\\n")
+            # summary_file.write(f" & {np.mean(serial_data[i]):.2f}".ljust(10))
+            # summary_file.write(f" & {np.mean(mod_data[i]):.2f} \\\\ \n".ljust(10))
 
         summary_file.write("\\hline \n")
 
-path = "Data/Vehicles/ModTests1/"
+path = "Data/Vehicles/FFT2/"
 # path = "Data/Vehicles/ModTests1/"
 
-generate_summary_table(path)
+# generate_summary_table(path)
 
 # generate_condensed_table()
-# generate_summaries()
+# generate_summaries(path)
 # convert_summaries_to_big_table()
-# make_plots()
-# make_mean_table()
+make_plots(path)
+# make_mean_table(path)
 
 
