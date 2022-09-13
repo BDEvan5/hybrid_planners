@@ -76,8 +76,8 @@ def generate_summaries(folder):
         # print(folders)
         file_name = folder + f"SummaryTable_{map_name}_{run_n}.txt"
 
-        metrics = ["Total Distance", "Total Curvature", "Total Deviation", "Avg. Progress", "Completion Rate"]
-        inds = [2, 4, 6, 7, 10]
+        metrics = ["Time", "Total Distance", "Total Curvature", "Total Deviation", "Avg. Progress", "Completion Rate"]
+        inds = [8, 2, 4, 6, 7, 10]
         agent_names = ["E2e", "Mod", "Serial"]
         
         with open(file_name, 'w') as summary_file:
@@ -201,8 +201,8 @@ def make_mean_table(folder):
     map_name = "columbia_small"
     # map_name = "f1_aut"
 
-    metrics = ["Total Distance m", "Total Curvature m$^{-1}$", "Total Deviation m", "Avg. Progress \%", "Completion Rate \%"]
-    inds = [2, 3, 4, 5, 6]
+    metrics = ["Time s", "Total Distance m", "Total Curvature m$^{-1}$", "Total Deviation m", "Avg. Progress \%", "Completion Rate \%"]
+    inds = [2, 3, 4, 5, 6, 7]
     agent_names = ["E2e", "Serial", "Mod"]
 
     e2e_data = [[] for i in range(len(inds))]
@@ -256,7 +256,7 @@ path = "Data/Vehicles/FFT2/"
 # generate_condensed_table()
 # generate_summaries(path)
 # convert_summaries_to_big_table()
-make_plots(path)
-# make_mean_table(path)
+# make_plots(path)
+make_mean_table(path)
 
 

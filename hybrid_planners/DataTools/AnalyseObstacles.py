@@ -168,7 +168,8 @@ class TestData:
         return ret_string
 
     def plot_avg_progress(self, x, color):
-        progresses = np.array([l.progress for l in self.laps]) * 100
+        progresses = np.array([l.progress for l in self.laps ]) * 100
+        # progresses = np.array([l.progress for l in self.laps]) * 100
         avg_progress = np.mean(progresses)
         q1 = np.percentile(progresses, 25)
         q3 = np.percentile(progresses, 75)
@@ -220,7 +221,7 @@ class TestSet:
         plt.plot(xs, avgs, '-', color=color, linewidth=2)
 
         plt.xlabel("Number of Obstacles")
-        plt.ylabel("Average Progress")
+        plt.ylabel("Completion Rate")
         plt.grid(True)
         plt.tight_layout()
         plt.ylim(0, 105)
@@ -241,19 +242,19 @@ def generate_pp_data_set():
     test_set.plot_avg_progress()
 
 def generate_pp_obs_graph():
-    path = "Data/Vehicles/RunPP/PP_f1_aut_2_0/"
+    # path = "Data/Vehicles/RunPP/PP_f1_aut_2_0/"
+
+    # test_set = TestSet(path)
+    # test_set.load_test_set()
+    # test_set.plot_avg_progress('blue', 0.05)
+
+    path = "Data/Vehicles/RunPP/PP_columbia_small_4_0/"
 
     test_set = TestSet(path)
     test_set.load_test_set()
-    test_set.plot_avg_progress('blue', 0.05)
+    test_set.plot_avg_progress('darkgreen', -0.0)
 
-    path = "Data/Vehicles/RunPP/PP_f1_aut_4_0/"
-
-    test_set = TestSet(path)
-    test_set.load_test_set()
-    test_set.plot_avg_progress('darkgreen', -0.05)
-
-    plt.savefig("Data/LowSpeedEval/PP_Obs_progress.pdf", bbox_inches='tight', pad_inches=0)
+    # plt.savefig("Data/LowSpeedEval/PP_Obs_progress.pdf", bbox_inches='tight', pad_inches=0)
     plt.show()
 
 

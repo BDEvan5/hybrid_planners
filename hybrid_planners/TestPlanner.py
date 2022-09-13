@@ -55,7 +55,7 @@ class TestSimulation():
         elif run.architecture == "FTG": self.planner = FollowTheGap(self.conf, run)
         else: self.planner = AgentTester(run, self.conf)
         # save_path = run.path + run.run_name + f"/TestData_{run.n_obstacles}/"
-        save_path = run.path + run.run_name + f"/TestData_test/"
+        save_path = run.path + run.run_name + f"/TestData_{run.n_obstacles}/"
         init_file_struct("Data/Vehicles/" +save_path)
         self.vehicle_state_history = VehicleStateHistory(save_path, run.run_name)
 
@@ -204,8 +204,8 @@ class TestSimulation():
 
 
 def main():
-    # sim = TestSimulation("RunPP")
-    sim = TestSimulation("BenchmarkRuns")
+    sim = TestSimulation("RunPP")
+    # sim = TestSimulation("BenchmarkRuns")
     sim.run_testing_evaluation()
 
 
@@ -221,8 +221,8 @@ def test_individual_run():
 
 
 if __name__ == '__main__':
-    # main()
-    test_individual_run()
+    main()
+    # test_individual_run()
 
 
 
