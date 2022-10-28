@@ -68,7 +68,7 @@ def generate_summaries(folder):
 
     set_n = 1
 
-    for run_n in range(10):
+    for run_n in range(5):
         folders = glob.glob(folder + f"*_{map_name}_{set_n}_{run_n}/")
         agents = [f.split("/")[-2] for f in folders]
         agents.sort()
@@ -209,7 +209,7 @@ def make_mean_table(folder):
     mod_data = [[] for i in range(len(inds))]
     serial_data = [[] for i in range(len(inds))] 
 
-    for run_n in range(10):
+    for run_n in range(5):
         file_name = folder + f"SummaryTable_{map_name}_{run_n}.txt"
         
         with open(file_name, 'r') as summary_file:
@@ -248,13 +248,15 @@ def make_mean_table(folder):
 
         summary_file.write("\\hline \n")
 
-path = "Data/Vehicles/FFT2/"
+# path = "Data/Vehicles/FFT2/"
+path = "Data/Vehicles/BigObs5/"
+# path = "Data/Vehicles/Frt2/"
 # path = "Data/Vehicles/ModTests1/"
 
-# generate_summary_table(path)
+generate_summary_table(path)
 
 # generate_condensed_table()
-# generate_summaries(path)
+generate_summaries(path)
 # convert_summaries_to_big_table()
 # make_plots(path)
 make_mean_table(path)

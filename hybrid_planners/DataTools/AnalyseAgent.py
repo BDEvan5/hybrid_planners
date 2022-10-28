@@ -70,10 +70,9 @@ class AnalyseTestLapData:
         self.path = vehicle_path
 
         # init_file_struct(self.summary_path + "SteeringDists/")
-        # v_path = self.path + "Trajectories/"
-        # if os.path.exists(v_path):
-        #     continue
-        # init_file_struct(self.path + "Trajectories/")
+        v_path = self.path + "Trajectories/"
+        if not os.path.exists(v_path):
+            init_file_struct(self.path + "Trajectories/")
         # init_file_struct(self.path + "Curvatures/")
         # init_file_struct(self.path + "Hists/")
         # init_file_struct(self.path + "Velocities/")
@@ -84,6 +83,7 @@ class AnalyseTestLapData:
             file.write("Lap" + "Steering".rjust(16) + "Total Distance".rjust(16) + "Mean Curvature".rjust(16) + "Total Curvature".rjust(16) + "Mean Deviation".rjust(16) + "Total Deviation".rjust(16) + "Progress".rjust(16) + "Time".rjust(16) + "Avg Velocity".rjust(16) + "\n")
 
         self.vehicle_name = self.path.split("/")[-2]
+        print(self.vehicle_name)
         self.map_name = self.vehicle_name.split("_")[1]
         if self.map_name == "f1":
             self.map_name += "_" + self.vehicle_name.split("_")[2]
@@ -99,7 +99,7 @@ class AnalyseTestLapData:
         self.obs_rng = np.random.default_rng(seed)
 
         # for self.lap_n in range(2):
-        for self.lap_n in range(100):
+        for self.lap_n in range(20):
             if not self.load_lap_data(): break # no more laps
             self.calculate_lap_statistics()
             # self.generate_steering_graphs()
@@ -108,11 +108,11 @@ class AnalyseTestLapData:
             # self.plot_velocity_heat_map()
             # self.plot_friction_graphs()
             # self.plot_obs_graphs()
-            # self.plot_obs_graphs([300, 680], [200, 490], [350, 250])
+            self.plot_obs_graphs([300, 680], [200, 490], [350, 250])
             # self.plot_obs_graphs()
             # self.make_mod_graph()
 
-        self.generate_summary_stats()
+        # self.generate_summary_stats()
 
     def load_lap_data(self):
         try:
@@ -351,12 +351,13 @@ class AnalyseTestLapData:
         plt.clf()
         self.map_data.plot_map_img_obs(self.obs_rng)
         xs, ys = self.map_data.xy2rc(self.map_data.xs, self.map_data.ys)
-        plt.plot(xs, ys, '--', color='orange', alpha=0.8)
+        path_orange = "#E67E22"
+        plt.plot(xs, ys, '--', color=path_orange, alpha=0.8)
         points = self.states[:, 0:2]
 
         
         xs, ys = self.map_data.pts2rc(points)
-        plt.plot(xs, ys, 'b-')
+        plt.plot(xs, ys, '#2874A6', linewidth=5)
         # plt.title(f"{self.vehicle_name.split('_')[0]}")
         plt.text(text[0], text[1], self.vehicle_name.split('_')[0], fontsize=25)
 
@@ -459,9 +460,25 @@ class AnalyseTestLapData:
         # plt.show()
 
 
+def make_path_avoidance_images():
+    # path = "Data/Vehicles/Frt2/"
+    path = "Data/Vehicles/FFT2/"
+    # path = "Data/Vehicles/BigObs5/"
+    TestData = AnalyseTestLapData()
+    
+    n = 1
+    
+    TestData.process_vehicle(path + f"Serial_columbia_small_1_{n}/")
+    TestData.process_vehicle(path + f"Mod_columbia_small_1_{n}/")
+    TestData.process_vehicle(path + f"E2e_columbia_small_1_{n}/")
+    
+
+
 def analyse_folder():
     # path = "Data/Vehicles/devel2fast/"
-    path = "Data/Vehicles/FFT2/"
+    path = "Data/Vehicles/BigObs5/"
+    # path = "Data/Vehicles/Frt2/"
+    # path = "Data/Vehicles/FFT2/"
     # path = "Data/Vehicles/FastTests/"
     # path = "Data/Vehicles/SlowTests/"
 
@@ -472,4 +489,6 @@ def analyse_folder():
     # TestData.process_vehicle(path + vehicle)
 
 if __name__ == '__main__':
-    analyse_folder()
+    # analyse_folder()
+    
+    make_path_avoidance_images()

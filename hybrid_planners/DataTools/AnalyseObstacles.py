@@ -254,7 +254,7 @@ def generate_pp_obs_graph():
     test_set.load_test_set()
     test_set.plot_avg_progress('darkgreen', -0.0)
 
-    # plt.savefig("Data/LowSpeedEval/PP_Obs_progress.pdf", bbox_inches='tight', pad_inches=0)
+    plt.savefig("Data/LowSpeedEval/PP_Obs_progress.pdf", bbox_inches='tight', pad_inches=0)
     plt.show()
 
 

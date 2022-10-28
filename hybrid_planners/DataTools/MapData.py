@@ -127,7 +127,8 @@ class MapData:
 
     def plot_map_img_obs(self, rng):
         # obstacle_size=[0.9, 0.9] 
-        obstacle_size=[0.3, 0.3]
+        obstacle_size=[0.6, 0.6]
+        # obstacle_size=[0.3, 0.3]
         n_obstacles = 8
         track_pts = np.array([self.xs, self.ys]).T
         radius = 1

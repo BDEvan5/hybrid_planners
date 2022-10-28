@@ -100,9 +100,10 @@ def plot_reward_steps(path):
 
 # thesis tests
 def obstacle_training_progress_comparision(p):
+    # map_name = "f1_aut"
     map_name = "columbia_small"
     set_n = 1
-    n_repeats = 6
+    n_repeats = 5
 
     agents = ["E2e", "Serial", "Mod"]
 
@@ -124,21 +125,24 @@ def obstacle_training_progress_comparision(p):
     plt.figure(1, figsize=(6, 2.5))
     plt.clf()
     colors = ["darkblue", "green", "red"]
+    pp = ["#CB4335", "#2874A6", "#229954", "#D4AC0D", "#884EA0", "#BA4A00", "#17A589"]
 
     for i, agent in enumerate(agents):
         xs = np.linspace(0, 500, 300)
         min, max, mean = convert_to_min_max_avg(steps_list[i], progress_list[i])
 
-        plt.plot(xs, mean, '-', color=colors[i], linewidth=2, label=agent)
+        plt.plot(xs, mean, '-', color=pp[i], linewidth=2, label=agent)
         plt.gca().fill_between(xs, min, max, color=colors[i], alpha=0.2)
 
     plt.xlabel("Training Steps (x100)")
     plt.ylabel("Track Progress %")
-    plt.legend(loc='lower right')
+    plt.legend(loc='lower right', ncol=3)
     plt.tight_layout()
     plt.grid()
 
-    plt.savefig("Data/ThesisEval/" + f"obstacle_training_progress_{map_name}.pdf", bbox_inches='tight', pad_inches=0)
+    plt.savefig(p+ f"obstacle_training_progress_{map_name}.pdf", bbox_inches='tight', pad_inches=0)
+    plt.savefig(p+ f"obstacle_training_progress_{map_name}.svg", bbox_inches='tight', pad_inches=0)
+    # plt.savefig("Data/ThesisEval/" + f"obstacle_training_progress_{map_name}.pdf", bbox_inches='tight', pad_inches=0)
 
     plt.show()
 
@@ -151,7 +155,9 @@ def fast_repeatability(p):
     set_n = 1
 
     agents = ["E2e", "Serial", "Mod"]
-    colors = ["darkblue", "green", "red"]
+    # colors = ["darkblue", "green", "red"]
+    pp = ["#CB4335", "#2874A6", "#229954", "#D4AC0D", "#884EA0", "#BA4A00", "#17A589"]
+    
 
     n_repeats = 10
     for a, agent in enumerate(agents):
@@ -174,7 +180,7 @@ def fast_repeatability(p):
         for i in range(len(steps_list)):
             xs = steps_list[i]
             ys = true_moving_average(progresses_list[i], 50)
-            plt.plot(xs, ys, '-', color=colors[a], linewidth=1.5)
+            plt.plot(xs, ys, '-', color=pp[a], linewidth=1.5)
 
         plt.title(agent)
 
@@ -186,7 +192,9 @@ def fast_repeatability(p):
         plt.tight_layout()
         plt.grid()
 
-        plt.savefig("Data/EvalAnalysis/" + f"TrainingRepeatability_{agent}.pdf", bbox_inches='tight', pad_inches=0.01)
+        plt.savefig(p + f"TrainingRepeatability_{agent}.svg", bbox_inches='tight', pad_inches=0.01)
+        plt.savefig(p + f"TrainingRepeatability_{agent}.pdf", bbox_inches='tight', pad_inches=0.01)
+        # plt.savefig("Data/EvalAnalysis/" + f"TrainingRepeatability_{agent}.pdf", bbox_inches='tight', pad_inches=0.01)
 
     plt.show()
 
@@ -210,7 +218,8 @@ def convert_to_min_max_avg(step_list, progress_list, length_xs=300):
     return min_line, max_line, avg_line
 
 
-p = "Data/Vehicles/FFT2/"
+p = "Data/Vehicles/BigObs5/"
+# p = "Data/Vehicles/FFT2/"
 
 obstacle_training_progress_comparision(p)
 

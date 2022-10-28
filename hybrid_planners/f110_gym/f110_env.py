@@ -431,6 +431,7 @@ class F110Env(gym.Env):
         return center_pts, widths
 
     def add_obstacles(self, n_obstacles, obstacle_size=[0.3, 0.3]):
+        # def add_obstacles(self, n_obstacles, obstacle_size=[0.5, 0.5]):
         """
         Adds a set number of obstacles to the envioronment using the track centerline. 
         Note: this function requires a csv file with the centerline points in it which can be loaded. 

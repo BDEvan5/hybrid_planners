@@ -1,13 +1,14 @@
 # test_name: "Benchmark" # the series of tests being run in thesis
 # test_name: "ModTests1" # the series of tests being run in thesis
-# test_name: "FinalTests2" # the series of tests being run in thesis
-test_name: "Frt2" # the series of tests being run in thesis
+test_name: "FinalTests2" # the series of tests being run in thesis
+# test_name: "BigObs5" # the series of tests being run in thesis
+# test_name: "Frt2" # the series of tests being run in thesis
 # test_name: devel
 
-n: 10
+n: 5
 # start_n:1 
 set_n: 1
-random_seed: 10000
+random_seed: 1000
 
 n_train_steps: 50000
 # n_test_laps: 2
@@ -17,13 +18,23 @@ n_obstacles: 8
 racing: True
 # racing: False
 
-map_name: "columbia_small"
+# map_name: "columbia_small"
 # map_name: "f1_aut"
 
 runs:
+  # - architecture: "E2e"
+  #   map_name: "f1_aut"
+  # - architecture: "Serial"
+  #   map_name: "f1_aut"
+  # - architecture: "Mod"
+  #   map_name: "f1_aut"
+
   - architecture: "E2e"
+    map_name: "columbia_small"
   - architecture: "Serial"
+    map_name: "columbia_small"
   - architecture: "Mod"
+    map_name: "columbia_small"
 
 
 
