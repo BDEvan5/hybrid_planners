@@ -99,7 +99,7 @@ class AnalyseTestLapData:
         self.obs_rng = np.random.default_rng(seed)
 
         # for self.lap_n in range(2):
-        for self.lap_n in range(20):
+        for self.lap_n in range(10):
             if not self.load_lap_data(): break # no more laps
             self.calculate_lap_statistics()
             # self.generate_steering_graphs()
@@ -108,9 +108,9 @@ class AnalyseTestLapData:
             # self.plot_velocity_heat_map()
             # self.plot_friction_graphs()
             # self.plot_obs_graphs()
-            self.plot_obs_graphs([300, 680], [200, 490], [350, 250])
+            # self.plot_obs_graphs([300, 680], [200, 490], [350, 250])
             # self.plot_obs_graphs()
-            # self.make_mod_graph()
+            self.make_mod_graph()
 
         # self.generate_summary_stats()
 
@@ -414,7 +414,9 @@ class AnalyseTestLapData:
         plt.clf()
         self.map_data.plot_map_img_obs(self.obs_rng)
         xs, ys = self.map_data.xy2rc(self.map_data.xs, self.map_data.ys)
-        plt.plot(xs, ys, '--', color='orange', alpha=0.8)
+        path_orange = "#E67E22"
+        
+        plt.plot(xs, ys, '--', color=path_orange, alpha=0.8)
         points = self.states[:, 0:2]
 
 
@@ -437,9 +439,9 @@ class AnalyseTestLapData:
         threshold = 0.15
         for i in range(len(points)-1):
             if abs(nn[i]) > threshold:
-                plt.plot(xs[i:i+2], ys[i:i+2], 'g', linewidth=2)
+                plt.plot(xs[i:i+2], ys[i:i+2], '#2ECC71', linewidth=5)
             else:
-                plt.plot(xs[i:i+2], ys[i:i+2], 'b', linewidth=2)
+                plt.plot(xs[i:i+2], ys[i:i+2], '#1A5276', linewidth=5)
         # plt.title(f"{self.vehicle_name.split('_')[0]}")
         plt.text(60, 430, self.vehicle_name.split('_')[0], fontsize=20)
 
@@ -462,7 +464,9 @@ class AnalyseTestLapData:
 
 def make_path_avoidance_images():
     # path = "Data/Vehicles/Frt2/"
-    path = "Data/Vehicles/FFT2/"
+    path = "Data/Vehicles/FastTests/"
+    # path = "Data/Vehicles/FinalTests2/"
+    # path = "Data/Vehicles/FFT2/"
     # path = "Data/Vehicles/BigObs5/"
     TestData = AnalyseTestLapData()
     
@@ -471,6 +475,12 @@ def make_path_avoidance_images():
     TestData.process_vehicle(path + f"Serial_columbia_small_1_{n}/")
     TestData.process_vehicle(path + f"Mod_columbia_small_1_{n}/")
     TestData.process_vehicle(path + f"E2e_columbia_small_1_{n}/")
+    
+def make_mod_images():
+    path = "Data/Vehicles/FastTests2/"
+    TestData = AnalyseTestLapData()
+    
+    TestData.process_vehicle(path + f"Mod_columbia_small_2_1/")
     
 
 
@@ -491,4 +501,5 @@ def analyse_folder():
 if __name__ == '__main__':
     # analyse_folder()
     
-    make_path_avoidance_images()
+    # make_path_avoidance_images()
+    make_mod_images()

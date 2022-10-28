@@ -208,7 +208,7 @@ class TestSet:
             for test_set in self.test_sets:
                 f.write(test_set.generate_summary_line() + "\n")
 
-    def plot_avg_progress(self, color, offset):
+    def plot_avg_progress(self, color, offset, label):
         plt.figure(1, figsize=(6, 2.5))
 
         xs = []
@@ -218,7 +218,7 @@ class TestSet:
             avgs.append(avg)
             xs.append(i+offset)
 
-        plt.plot(xs, avgs, '-', color=color, linewidth=2)
+        plt.plot(xs, avgs, '-', color=color, linewidth=2, label=label)
 
         plt.xlabel("Number of Obstacles")
         plt.ylabel("Completion Rate")
@@ -233,6 +233,7 @@ class TestSet:
 
 def generate_pp_data_set():
     path = "Data/Vehicles/RunPP/PP_f1_aut_2_0/"
+    # path = "Data/Vehicles/RunPP/PP_f1_aut_2_0/"
     # path = "Data/Vehicles/RunPP/PP_f1_aut_1_0/"
 
     test_set = TestSet(path)
@@ -242,19 +243,24 @@ def generate_pp_data_set():
     test_set.plot_avg_progress()
 
 def generate_pp_obs_graph():
-    # path = "Data/Vehicles/RunPP/PP_f1_aut_2_0/"
-
-    # test_set = TestSet(path)
-    # test_set.load_test_set()
-    # test_set.plot_avg_progress('blue', 0.05)
 
     path = "Data/Vehicles/RunPP/PP_columbia_small_4_0/"
 
     test_set = TestSet(path)
     test_set.load_test_set()
-    test_set.plot_avg_progress('darkgreen', -0.0)
+    test_set.plot_avg_progress('#6C3483', -0.05, "Columbia")
 
-    plt.savefig("Data/LowSpeedEval/PP_Obs_progress.pdf", bbox_inches='tight', pad_inches=0)
+    path = "Data/Vehicles/RunPP/PP_f1_aut_4_0/"
+
+    test_set = TestSet(path)
+    test_set.load_test_set()
+    test_set.plot_avg_progress("#1E8449", 0.05, "AUT")
+    
+    plt.legend()
+    plt.tight_layout()
+
+    plt.savefig(path + "PP_Obs_progress.pdf", bbox_inches='tight', pad_inches=0)
+    # plt.savefig("Data/LowSpeedEval/PP_Obs_progress.pdf", bbox_inches='tight', pad_inches=0)
     plt.show()
 
 

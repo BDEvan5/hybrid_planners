@@ -10,13 +10,14 @@ random_seed: 4000
 
 n_train_steps: 50000
 # n_test_laps: 2
-n_test_laps: 100
+n_test_laps: 10
 
 # n_obstacles: 8
 racing: True
 # racing: False
 
-map_name: "columbia_small"
+# map_name: "columbia_small"
+# map_name: "f1_aut_wide"
 # map_name: "f1_aut"
 
 runs:

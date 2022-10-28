@@ -84,7 +84,7 @@ class TestSimulation():
                 observation = self.run_step(action)
                 if  SHOW_TEST: self.env.render('human_fast')
 
-            # self.planner.architecture.history.save(self.planner.arch_path)
+            self.planner.architecture.history.save(self.planner.arch_path)
 
             if observation['lap_done']:
                 if VERBOSE: print(f"Lap {i} Complete in time: {observation['current_laptime']}")
@@ -210,7 +210,8 @@ def main():
 
 
 def test_individual_run():
-    with open("Data/Vehicles/FastTests2/Mod_columbia_small_2_1/Mod_columbia_small_2_1_record.yaml") as file:
+    with open("Data/Vehicles/BigObs5/Mod_columbia_small_1_2/Mod_columbia_small_1_2_record.yaml") as file:
+    # with open("Data/Vehicles/FastTests2/Mod_columbia_small_2_1/Mod_columbia_small_2_1_record.yaml") as file:
         run_dict = yaml.load(file, Loader=yaml.FullLoader)
 
     run = Namespace(**run_dict)
@@ -221,8 +222,8 @@ def test_individual_run():
 
 
 if __name__ == '__main__':
-    main()
-    # test_individual_run()
+    # main()
+    test_individual_run()
 
 
 
